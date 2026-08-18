@@ -1251,9 +1251,10 @@ body.is-touch-device button{min-height:44px;}
 #global-mute-btn{position:fixed;top:56px;left:14px;z-index:100002;width:70px;height:70px;border-radius:50%;border:2px solid rgba(255,255,255,0.3);background:rgba(12,10,30,0.75);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.3);padding:0;}
 #global-mute-btn img{width:35px;height:35px;}
 #global-mute-btn.gm-muted{background:rgba(220,55,55,0.28);border-color:rgba(220,55,55,0.5);}
-#mute-hint{position:fixed;top:118px;left:14px;max-width:150px;font-size:0.68rem;line-height:1.25;color:#fff;font-weight:600;background:rgba(12,10,30,0.7);padding:5px 8px;border-radius:8px;z-index:100002;backdrop-filter:blur(6px);}
-body.game-active #mute-hint{display:none;}
-#mute-hint.gm-hidden{display:none;}
+#mute-hint{position:fixed;top:118px;left:14px;max-width:150px;font-size:0.68rem;line-height:1.25;color:#fff;font-weight:600;background:rgba(12,10,30,0.7);padding:5px 8px;border-radius:8px;z-index:100002;backdrop-filter:blur(6px);display:none;}
+#global-mute-btn:hover + #mute-hint{display:block;}
+body.game-active #mute-hint{display:none !important;}
+#mute-hint.gm-hidden{display:none !important;}
 body.game-active #global-mute-btn{display:none;} /* in-level taskbar's mute button takes over */
 #global-mute-btn.gm-hidden{display:none;}
 
