@@ -1,1917 +1,259 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Dream Drop — Who's Playing?</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Montserrat', Arial, sans-serif;
-      background: url('Images/Common_Images/bg2.jpg') no-repeat center center / cover;
-      background-color: #aeedf5;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* ── Header ─────────────────────────────────────────── */
-    #lp-header {
-      text-align: center;
-      padding: clamp(16px,3vh,32px) 0 clamp(8px,1.5vh,18px);
-    }
-    #lp-header h1 {
-      font-size: clamp(1.8rem,5vw,3.2rem);
-      color: brown;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-    #lp-header p {
-      font-size: clamp(0.75rem,2vw,1rem);
-      color: #4b2e83;
-      font-weight: 700;
-      margin-top: 4px;
-    }
-    #lp-sub {
-      font-size: clamp(1rem,2.5vw,1.4rem);
-      color: #1a1a2e;
-      font-weight: 800;
-      margin-top: clamp(8px,1.5vh,16px);
-      text-align: center;
-    }
-
-    /* ── Player cards grid ───────────────────────────────── */
-    #players-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: clamp(12px,2vw,24px);
-      padding: clamp(12px,2vh,24px) clamp(16px,4vw,48px);
-      max-width: 960px;
-      margin: 0 auto;
-    }
-
-    /* Each saved player card */
-    .player-card {
-      width: clamp(130px,18vw,180px);
-      background: rgba(255,255,255,0.92);
-      border-radius: 18px;
-      padding: 14px 10px 12px;
-      text-align: center;
-      cursor: pointer;
-      transition: transform 0.18s, box-shadow 0.18s;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-      position: relative;
-      border: 3px solid transparent;
-    }
-    .player-card:hover  { transform: translateY(-6px) scale(1.04); box-shadow: 0 14px 32px rgba(0,0,0,0.22); }
-    .player-card:active { transform: scale(0.97); }
-
-    /* Jersey frame around photo */
-    .player-frame {
-      width: clamp(80px,12vw,110px);
-      height: clamp(80px,12vw,110px);
-      margin: 0 auto 10px;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 4px solid #fff;
-      position: relative;
-      box-shadow: 0 0 0 4px var(--jersey-color, #e03040);
-    }
-    .player-frame img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    /* Jersey number badge */
-    .jersey-badge {
-      position: absolute;
-      bottom: -4px;
-      right: -4px;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background: var(--jersey-color, #e03040);
-      color: #fff;
-      font-weight: 900;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid #fff;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    }
-
-    .player-name {
-      font-size: clamp(0.85rem,1.8vw,1.05rem);
-      font-weight: 800;
-      color: #1a1a2e;
-      margin-bottom: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .player-stats {
-      font-size: clamp(0.6rem,1.2vw,0.72rem);
-      color: #888;
-    }
-
-    /* Delete button on card */
-    .card-delete {
-      position: absolute;
-      top: 6px; right: 8px;
-      background: none;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-      color: #ccc;
-      line-height: 1;
-      padding: 2px;
-      transition: color 0.15s;
-    }
-    .card-delete:hover { color: #e03040; }
-
-    /* Add new player card */
-    #add-card {
-      width: clamp(130px,18vw,180px);
-      min-height: clamp(130px,18vw,180px);
-      background: rgba(255,255,255,0.55);
-      border-radius: 18px;
-      border: 3px dashed rgba(75,46,131,0.35);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      cursor: pointer;
-      transition: background 0.18s, transform 0.15s;
-    }
-    #add-card:hover  { background: rgba(255,255,255,0.8); transform: translateY(-4px); }
-    #add-card:active { transform: scale(0.97); }
-    #add-card .add-icon { font-size: clamp(2rem,4vw,2.8rem); color: #4b2e83; }
-    #add-card p { font-size: clamp(0.75rem,1.5vw,0.9rem); color: #4b2e83; font-weight: 700; text-align: center; line-height: 1.3; }
-
-    /* ── Guest option ─────────────────────────────────────── */
-    #guest-row {
-      max-width: 420px;
-      margin: clamp(10px,2vh,20px) auto 0;
-      padding: 0 16px clamp(16px,3vh,28px);
-      text-align: center;
-    }
-    #guest-btn {
-      width: 100%;
-      padding: 12px 20px;
-      border-radius: 40px;
-      border: 2px solid #4b2e83;
-      background: rgba(255,255,255,0.85);
-      color: #4b2e83;
-      font-weight: 800;
-      font-size: clamp(0.85rem,1.8vw,1rem);
-      cursor: pointer;
-      transition: background 0.18s, transform 0.15s;
-    }
-    #guest-btn:hover { background: #4b2e83; color: #fff; transform: translateY(-2px); }
-    #guest-btn:active { transform: scale(0.97); }
-    #guest-hint { margin-top: 6px; font-size: clamp(0.65rem,1.3vw,0.78rem); color: #4b4b4b; }
-
-    /* ── Always-visible mute button (consistency with home.html) ──
-       index.html itself has no sound, but toggling this sets the shared
-       mute preference in localStorage so it's already applied once the
-       player moves on to home.html / gameplay. */
-    #global-mute-btn{position:fixed;top:56px;left:14px;z-index:100002;width:70px;height:70px;border-radius:50%;border:1.5px solid rgba(75,46,131,0.35);background:rgba(255,255,255,0.85);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.18);padding:0;}
-    #global-mute-btn img{width:35px;height:35px;}
-    #global-mute-btn.gm-muted{background:rgba(220,55,55,0.15);border-color:rgba(220,55,55,0.5);}
-    #mute-hint{position:fixed;top:118px;left:14px;max-width:150px;font-size:0.68rem;line-height:1.25;color:#4b2e83;font-weight:600;background:rgba(255,255,255,0.85);padding:5px 8px;border-radius:8px;z-index:100002;display:none;}
-    #global-mute-btn:hover + #mute-hint{display:block;}
-    #mute-hint.gm-hidden{display:none !important;}
-    /* ── AVATAR CREATOR OVERLAY ──────────────────────────── */
-    #creator-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.65);
-      z-index: 9000;
-      align-items: center;
-      justify-content: center;
-      padding: 12px;
-    }
-    #creator-overlay.open { display: flex; }
-
-    #creator-box {
-      background: #fff;
-      border-radius: 20px;
-      width: min(96vw, 560px);
-      max-height: 92vh;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.5);
-    }
-
-    #creator-header {
-      padding: 16px 20px 12px;
-      border-bottom: 1px solid #eee;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0;
-    }
-    #creator-header h2 {
-      font-size: clamp(1rem,2.5vw,1.2rem);
-      color: #1a1a2e;
-      font-weight: 800;
-    }
-    #creator-close {
-      background: #f4f4f4;
-      border: none;
-      border-radius: 50%;
-      width: 32px; height: 32px;
-      font-size: 18px;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      color: #555;
-      transition: background 0.15s;
-      min-height: unset !important;
-    }
-    #creator-close:hover { background: #fee; color: #e03040; }
-
-    #creator-body { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
-
-    /* Steps */
-    .creator-step { display: none; flex-direction: column; gap: 14px; }
-    .creator-step.active { display: flex; }
-
-    .step-label {
-      font-size: 12px;
-      font-weight: 700;
-      color: #888;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    /* Camera / preview area */
-    #cam-wrap {
-      position: relative;
-      border-radius: 14px;
-      overflow: hidden;
-      background: #111;
-      aspect-ratio: 4/3;
-      width: 100%;
-    }
-    #cam-video, #cam-canvas {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    #cam-canvas { display: none; }
-
-    #cam-btn-row {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-    }
-
-    /* Name input */
-    #name-input {
-      font-size: clamp(1rem,2.5vw,1.2rem);
-      font-weight: 800;
-      border: 2.5px solid #e8eaf0;
-      border-radius: 10px;
-      padding: 10px 14px;
-      width: 100%;
-      text-align: center;
-      color: #1a1a2e;
-      outline: none;
-      font-family: 'Montserrat', Arial, sans-serif;
-      transition: border-color 0.15s;
-    }
-    #name-input:focus { border-color: #4b2e83; }
-
-    /* Jersey colour picker */
-    #jersey-colours {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .jc-swatch {
-      width: clamp(36px,6vw,48px);
-      height: clamp(36px,6vw,48px);
-      border-radius: 50%;
-      cursor: pointer;
-      border: 3px solid transparent;
-      transition: transform 0.15s, border-color 0.15s;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.18);
-    }
-    .jc-swatch:hover   { transform: scale(1.12); }
-    .jc-swatch.picked  { border-color: #1a1a2e; transform: scale(1.15); }
-
-    /* Jersey number picker */
-    #jersey-numbers {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .jn-btn {
-      width: clamp(36px,5.5vw,46px);
-      height: clamp(36px,5.5vw,46px);
-      border-radius: 10px;
-      border: 2px solid #e0e4f0;
-      background: #f8f9ff;
-      font-weight: 800;
-      font-size: clamp(0.8rem,1.6vw,1rem);
-      cursor: pointer;
-      transition: background 0.12s, border-color 0.12s, transform 0.1s;
-      color: #1a1a2e;
-      font-family: 'Montserrat', Arial, sans-serif;
-      min-height: unset !important;
-    }
-    .jn-btn:hover  { background: #e8eaf8; transform: scale(1.08); }
-    .jn-btn.picked { background: #4b2e83; color: #fff; border-color: #4b2e83; }
-
-    /* Preview card in creator */
-    #preview-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      padding: 16px;
-      background: #f8f9ff;
-      border-radius: 14px;
-      border: 1.5px solid #e0e4f0;
-    }
-    #preview-frame {
-      width: 100px; height: 100px;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 4px solid #fff;
-      position: relative;
-    }
-    #preview-img { width: 100%; height: 100%; object-fit: cover; }
-    #preview-name { font-weight: 800; font-size: 1.1rem; color: #1a1a2e; }
-
-    /* Action buttons inside creator */
-    .creator-btn {
-      border: none;
-      border-radius: 12px;
-      padding: clamp(10px,1.8vh,14px) 24px;
-      font-family: 'Montserrat', Arial, sans-serif;
-      font-weight: 800;
-      font-size: clamp(0.85rem,1.8vw,1rem);
-      cursor: pointer;
-      transition: transform 0.12s, box-shadow 0.12s;
-      min-height: unset !important;
-    }
-    .creator-btn:hover  { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.15); }
-    .creator-btn:active { transform: scale(0.97); }
-    .btn-primary { background: #4b2e83; color: #fff; }
-    .btn-success { background: #2ecc71; color: #1a4a2e; }
-    .btn-danger  { background: #e03040; color: #fff; }
-    .btn-neutral { background: #f0f0f0; color: #444; }
-
-    /* Step nav row */
-    .step-nav {
-      display: flex;
-      gap: 10px;
-      justify-content: space-between;
-    }
-
-    /* ── No-camera fallback ──────────────────────────────── */
-    #no-cam-msg {
-      display: none;
-      text-align: center;
-      padding: 20px;
-      color: #666;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-    #cam-placeholder {
-      display: none;
-      width: 100%;
-      aspect-ratio: 4/3;
-      border-radius: 14px;
-      background: #e8e8e8;
-      align-items: center;
-      justify-content: center;
-      font-size: 80px;
-    }
-
-    /* ── Step indicator dots ─────────────────────────────── */
-    #step-dots {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      padding: 0 0 4px;
-    }
-    .sdot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: #ddd;
-      transition: background 0.2s, transform 0.2s;
-    }
-    .sdot.on { background: #4b2e83; transform: scale(1.25); }
-
-    /* ── Emoji avatar picker ─────────────────────────────── */
-    #emoji-picker-wrap {
-      display: none;
-      flex-direction: column;
-      gap: 14px;
-    }
-    #emoji-picker-wrap.open { display: flex; }
-    .emoji-gender-tabs {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-    }
-    .eg-tab {
-      flex: 1;
-      padding: 8px 0;
-      border-radius: 10px;
-      border: 2px solid #e0e4f0;
-      background: #f8f9ff;
-      font-size: 0.85rem;
-      font-weight: 800;
-      cursor: pointer;
-      color: #4b2e83;
-      font-family: 'Montserrat', Arial, sans-serif;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .eg-tab.active { background: #4b2e83; color: #fff; border-color: #4b2e83; }
-    #emoji-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
-    }
-    .emoji-opt {
-      aspect-ratio: 1;
-      border-radius: 14px;
-      border: 3px solid transparent;
-      background: #f4f4f8;
-      font-size: clamp(1.8rem, 5vw, 2.4rem);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: transform 0.12s, border-color 0.15s, background 0.12s;
-    }
-    .emoji-opt:hover  { transform: scale(1.12); background: #ede8fa; }
-    .emoji-opt.picked { border-color: #4b2e83; background: #ede8fa; transform: scale(1.08); }
-
-    /* ── Responsive ──────────────────────────────────────── */
-    @media (max-width: 500px) {
-      .player-card, #add-card { width: clamp(110px,40vw,150px); }
-    }
-
-    /* ── 3-dots menu button (top-right) ─────────────────── */
-    #settings-btn {
-      position: fixed;
-      top: 14px;
-      right: 18px;
-      z-index: 9500;
-      background: rgba(255,255,255,0.9);
-      border: none;
-      border-radius: 50%;
-      width: 44px;
-      height: 44px;
-      font-size: 22px;
-      cursor: pointer;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.18);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.15s, transform 0.15s;
-      letter-spacing: 0;
-      line-height: 1;
-    }
-    #settings-btn:hover { background: #fff; transform: scale(1.08); }
-
-    /* ── Settings panel overlay ──────────────────────────── */
-    #settings-panel {
-      display: none;
-      position: fixed;
-      top: 0; right: 0;
-      width: min(340px, 92vw);
-      height: 100vh;
-      background: #fff;
-      z-index: 9400;
-      box-shadow: -6px 0 32px rgba(0,0,0,0.22);
-      flex-direction: column;
-      overflow-y: auto;
-    }
-    #settings-panel.open { display: flex; }
-    #sp-backdrop {
-      display: none;
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.35);
-      z-index: 9350;
-    }
-    #sp-backdrop.open { display: block; }
-
-    #sp-header {
-      padding: 18px 20px 14px;
-      border-bottom: 1px solid #eee;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #4b2e83;
-      color: #fff;
-      flex-shrink: 0;
-    }
-    #sp-header h2 { font-size: 1.1rem; font-weight: 800; }
-    #sp-close {
-      background: rgba(255,255,255,0.18);
-      border: none;
-      border-radius: 50%;
-      width: 30px; height: 30px;
-      font-size: 16px;
-      cursor: pointer;
-      color: #fff;
-      display: flex; align-items: center; justify-content: center;
-    }
-    #sp-close:hover { background: rgba(255,255,255,0.32); }
-
-    .sp-section {
-      padding: 18px 20px 14px;
-      border-bottom: 1px solid #f0f0f0;
-    }
-    .sp-section-title {
-      font-size: 11px;
-      font-weight: 800;
-      color: #888;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 12px;
-    }
-
-    /* Player limit row */
-    .sp-limit-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      justify-content: space-between;
-    }
-    .sp-limit-row span {
-      font-size: 0.85rem;
-      color: #444;
-      font-weight: 700;
-    }
-    #limit-stepper {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .lim-btn {
-      width: 32px; height: 32px;
-      border-radius: 8px;
-      border: 2px solid #4b2e83;
-      background: #f4f0ff;
-      color: #4b2e83;
-      font-size: 18px;
-      font-weight: 900;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.12s;
-      line-height: 1;
-    }
-    .lim-btn:hover { background: #4b2e83; color: #fff; }
-    .lim-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-    #limit-display {
-      font-size: 1.4rem;
-      font-weight: 900;
-      color: #1a1a2e;
-      min-width: 28px;
-      text-align: center;
-    }
-    #limit-max-hint {
-      font-size: 11px;
-      color: #aaa;
-      margin-top: 6px;
-    }
-
-    /* Memory bar */
-    .mem-bar-wrap {
-      background: #f0f0f5;
-      border-radius: 8px;
-      height: 14px;
-      overflow: hidden;
-      margin: 8px 0 4px;
-    }
-    #mem-bar-fill {
-      height: 100%;
-      border-radius: 8px;
-      background: linear-gradient(90deg, #4b2e83, #7c4dff);
-      transition: width 0.5s;
-    }
-    #mem-bar-fill.warn { background: linear-gradient(90deg, #f5a623, #e03040); }
-    #mem-label {
-      font-size: 12px;
-      color: #666;
-      font-weight: 700;
-    }
-    #mem-breakdown {
-      font-size: 11px;
-      color: #999;
-      margin-top: 4px;
-      line-height: 1.6;
-    }
-
-    /* Host badge on card */
-    .host-badge {
-      position: absolute;
-      top: 6px;
-      left: 8px;
-      background: linear-gradient(135deg, #f5a623, #e03040);
-      color: #fff;
-      font-size: 10px;
-      font-weight: 900;
-      border-radius: 8px;
-      padding: 2px 7px;
-      letter-spacing: 0.05em;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.22);
-    }
-
-    /* Host suggestion banner */
-    #host-suggestion {
-      max-width: 720px;
-      margin: 0 auto 8px;
-      padding: 0 clamp(16px,4vw,48px);
-    }
-    #host-banner {
-      background: linear-gradient(135deg, #fff8e1, #fffde7);
-      border: 2px solid #ffd54f;
-      border-radius: 14px;
-      padding: 14px 18px;
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-    }
-    #host-banner .hb-icon { font-size: 1.8rem; flex-shrink: 0; }
-    #host-banner .hb-body { flex: 1; }
-    #host-banner .hb-title { font-size: 0.9rem; font-weight: 900; color: #e65100; margin-bottom: 4px; }
-    #host-banner .hb-text  { font-size: 0.78rem; color: #555; line-height: 1.5; }
-    #host-banner .hb-close {
-      background: none; border: none; font-size: 16px; cursor: pointer;
-      color: #aaa; flex-shrink: 0; padding: 0;
-    }
-    #host-banner .hb-close:hover { color: #e03040; }
-
-    /* Reset all data button */
-    .sp-danger-btn {
-      width: 100%;
-      padding: 10px;
-      border-radius: 10px;
-      border: 2px solid #e03040;
-      background: #fff0f0;
-      color: #e03040;
-      font-weight: 800;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: background 0.15s;
-      font-family: 'Montserrat', Arial, sans-serif;
-    }
-    .sp-danger-btn:hover { background: #e03040; color: #fff; }
-
-    /* Host tag in settings */
-    .sp-host-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .sp-host-row select {
-      flex: 1;
-      padding: 8px 10px;
-      border-radius: 8px;
-      border: 2px solid #e0e4f0;
-      font-family: 'Montserrat', Arial, sans-serif;
-      font-weight: 700;
-      font-size: 0.85rem;
-      color: #1a1a2e;
-      outline: none;
-    }
-    .sp-host-row select:focus { border-color: #4b2e83; }
-    .sp-assign-btn {
-      padding: 9px 14px;
-      border-radius: 8px;
-      border: none;
-      background: #4b2e83;
-      color: #fff;
-      font-weight: 800;
-      font-size: 0.8rem;
-      cursor: pointer;
-      font-family: 'Montserrat', Arial, sans-serif;
-      white-space: nowrap;
-    }
-    .sp-assign-btn:hover { background: #3a2060; }
-
-    /* ── Browser reference table ─────────────────────────── */
-    #browser-table-wrap {
-      margin-top: 14px;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1.5px solid #e0e4f0;
-    }
-    #browser-table-wrap table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-    }
-    #browser-table-wrap thead tr {
-      background: #4b2e83;
-      color: #fff;
-    }
-    #browser-table-wrap thead th {
-      padding: 8px 10px;
-      text-align: left;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-    }
-    #browser-table-wrap tbody tr {
-      cursor: pointer;
-      transition: background 0.12s;
-      border-bottom: 1px solid #f0f0f5;
-    }
-    #browser-table-wrap tbody tr:last-child { border-bottom: none; }
-    #browser-table-wrap tbody tr:hover { background: #f0ecfa; }
-    #browser-table-wrap tbody tr.selected {
-      background: #ede8fa;
-      font-weight: 800;
-    }
-    #browser-table-wrap tbody tr.detected {
-      border-left: 3px solid #2ecc71;
-    }
-    #browser-table-wrap tbody td {
-      padding: 8px 10px;
-      color: #333;
-      vertical-align: middle;
-    }
-    .bt-icon { font-size: 15px; margin-right: 5px; }
-    .bt-badge {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 800;
-      padding: 2px 6px;
-      border-radius: 6px;
-      margin-left: 5px;
-    }
-    .bt-badge.detected { background: #d4f8e8; color: #1a7a4a; }
-    .bt-badge.selected { background: #ede8fa; color: #4b2e83; }
-    #bt-apply-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      margin-top: 10px;
-    }
-    #bt-apply-row span {
-      font-size: 12px;
-      color: #666;
-      flex: 1;
-    }
-    .bt-apply-btn {
-      padding: 8px 14px;
-      border-radius: 8px;
-      border: none;
-      background: #4b2e83;
-      color: #fff;
-      font-weight: 800;
-      font-size: 12px;
-      cursor: pointer;
-      font-family: 'Montserrat', Arial, sans-serif;
-      white-space: nowrap;
-      transition: background 0.12s;
-    }
-    .bt-apply-btn:hover { background: #3a2060; }
-    #bt-selected-info {
-      font-size: 11px;
-      color: #4b2e83;
-      font-weight: 700;
-      margin-top: 6px;
-      min-height: 16px;
-    }
-  </style>
+  <!-- =====================================================
+       MOBILE/TABLET SUPPORT ADDED:
+       Updated viewport meta tag.
+       - Added maximum-scale=1 to prevent iOS auto-zoom on input focus
+       - Added user-scalable=no to prevent accidental pinch-zoom during gameplay
+       The original width=device-width, initial-scale=1.0 is kept.
+       ===================================================== -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Ball Game</title>
+  <link rel="stylesheet" type="text/css" href="stylee.css">
 </head>
-<body>
 
-  <!-- ── 3-dots settings button ── -->
-  <button id="settings-btn" onclick="openSettings()" title="Settings">⋮</button>
-
-  <!-- ── Settings backdrop ── -->
-  <div id="sp-backdrop" onclick="closeSettings()"></div>
-
-  <!-- ── Settings panel ── -->
-  <div id="settings-panel">
-    <div id="sp-header">
-      <h2>⚙️ Settings</h2>
-      <button id="sp-close" onclick="closeSettings()">✕</button>
-    </div>
-
-    <!-- Max players section -->
-    <div class="sp-section">
-      <div class="sp-section-title">👥 Player Limit</div>
-      <div class="sp-limit-row">
-        <span>Max players on this device</span>
-        <div id="limit-stepper">
-          <button class="lim-btn" id="lim-minus" onclick="changeLimit(-1)">−</button>
-          <div id="limit-display">5</div>
-          <button class="lim-btn" id="lim-plus"  onclick="changeLimit(+1)">+</button>
-        </div>
-      </div>
-      <div id="limit-max-hint">Browser max: calculating…</div>
-
-      <!-- Storage / memory usage -->
-      <div style="margin-top:14px;">
-        <div class="sp-section-title" style="margin-bottom:6px;">💾 Storage Usage</div>
-        <div class="mem-bar-wrap"><div id="mem-bar-fill" style="width:0%;"></div></div>
-        <div id="mem-label">Calculating…</div>
-        <div id="mem-breakdown"></div>
-      </div>
-
-      <!-- Browser reference table -->
-      <div style="margin-top:14px;">
-        <div class="sp-section-title" style="margin-bottom:8px;">🌐 Select Your Browser</div>
-        <p style="font-size:11px;color:#999;margin-bottom:8px;line-height:1.4;">
-          Tap your browser to set the storage limit automatically. Your browser is auto-detected where possible.
-        </p>
-        <div id="browser-table-wrap">
-          <div id="bt-search-wrap" style="padding:8px 10px;border-bottom:1.5px solid #e0e4f0;background:#fafafa;">
-            <div style="position:relative;">
-              <span style="position:absolute;left:9px;top:50%;transform:translateY(-50%);font-size:13px;color:#aaa;pointer-events:none;">🔍</span>
-              <input id="bt-search" type="text" placeholder="Search browser…"
-                oninput="filterBrowserTable(this.value)"
-                style="width:100%;box-sizing:border-box;padding:7px 10px 7px 30px;border:1.5px solid #e0e4f0;border-radius:8px;font-size:12px;font-family:'Montserrat',Arial,sans-serif;font-weight:600;color:#1a1a2e;outline:none;background:#fff;transition:border 0.15s;"
-                onfocus="this.style.borderColor='#4b2e83'" onblur="this.style.borderColor='#e0e4f0'">
-              <button id="bt-search-clear" onclick="clearBrowserSearch()" title="Clear"
-                style="display:none;position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:14px;color:#aaa;padding:0;line-height:1;">✕</button>
-            </div>
-            <div id="bt-no-results" style="display:none;text-align:center;padding:10px 0;font-size:12px;color:#999;font-style:italic;">No browsers match your search</div>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Browser</th>
-                <th>Storage</th>
-                <th>Max Players</th>
-              </tr>
-            </thead>
-            <tbody id="browser-table-body">
-              <!-- rows injected by JS -->
-            </tbody>
-          </table>
-        </div>
-        <div id="bt-selected-info"></div>
-        <div id="bt-apply-row">
-          <span id="bt-apply-label">Select a browser above to apply its limit</span>
-          <button class="bt-apply-btn" id="bt-apply-btn" onclick="applyBrowserLimit()" disabled>✅ Apply</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Host player section -->
-    <div class="sp-section">
-      <div class="sp-section-title">👑 Host / Teacher Player</div>
-      <p style="font-size:12px;color:#666;margin-bottom:10px;line-height:1.5;">
-        The Host player has a gold crown badge on their card. Useful for teacher accounts or group leaders.
-      </p>
-      <div class="sp-host-row">
-        <select id="host-select"><option value="">— none —</option></select>
-        <button class="sp-assign-btn" onclick="assignHost()">👑 Set Host</button>
-      </div>
-    </div>
-
-    <!-- Danger zone -->
-    <div class="sp-section">
-      <div class="sp-section-title">⚠️ Danger Zone</div>
-      <button class="sp-danger-btn" onclick="resetAllData()">🗑️ Reset All Players &amp; Progress</button>
-    </div>
-
-    <!-- App info -->
-    <div class="sp-section" style="border-bottom:none;">
-      <div class="sp-section-title">ℹ️ About</div>
-      <div style="font-size:12px;color:#999;line-height:1.8;">
-        Dream Drop — Inclusive Education<br>
-        Sri Sathya Sai Vidya Vahini<br>
-        <span id="sp-version">v1.0</span>
-      </div>
-    </div>
+<body id="fidrat-home">
+  <div id="rotate-block">
+    <div id="rotate-icon">&#8635;</div>
+    <h2>Rotate your device</h2>
+    <p>Please turn your phone to landscape mode.</p>
+  </div>
+  <div id="player-badge" style="display:none;position:fixed;top:10px;left:10px;z-index:5000;align-items:center;gap:8px;background:rgba(255,255,255,0.92);border-radius:40px;padding:4px 12px 4px 4px;box-shadow:0 4px 14px rgba(0,0,0,0.18);cursor:pointer;" onclick="window.location.href='index.html'">
+    <div id="pb-frame" style="width:36px;height:36px;border-radius:50%;overflow:hidden;border:3px solid #4b2e83;flex-shrink:0;"><img id="pb-photo" src="" style="width:100%;height:100%;object-fit:cover;"></div>
+    <span id="pb-name" style="font-weight:800;font-size:13px;color:#1a1a2e;max-width:90px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></span>
+    <span style="font-size:10px;color:#888;">▼</span>
+  </div>
+  <div id="device-block">
+    <!-- =====================================================
+         MOBILE/TABLET SUPPORT ADDED:
+         Updated message — now only very small phones (< 400px) see this.
+         Tablets and larger devices are allowed to play.
+         ===================================================== -->
+    <h1>🚫 Screen Too Small</h1>
+    <p>This game works best on a tablet, laptop, or desktop.<br>
+      Please use a larger screen to play.</p>
   </div>
 
-  <!-- ── Host suggestion banner ── -->
-  <div id="host-suggestion">
-    <div id="host-banner" style="display:none;">
-      <div class="hb-icon">💡</div>
-      <div class="hb-body">
-        <div class="hb-title">Suggestion: Add a Host Player</div>
-        <div class="hb-text">
-          Consider adding a <strong>Teacher / Host</strong> account — the first card on the list.
-          A Host can monitor all players, reset progress for a student, and manage the tablet.
-          Go to <strong>⚙️ Settings → Host Player</strong> to assign one after creating a player.
-        </div>
-      </div>
-      <button class="hb-close" onclick="dismissHostBanner()">✕</button>
+  <div id="focus-block">
+    <h2>⚠️ Game Paused</h2>
+    <p>Please return to the game window to continue.</p>
+  </div>
+
+
+
+
+  <div class="header">
+
+    <!-- Audio toggle moved to the in-game taskbar (right side).
+         This wrapper is kept off-screen so existing sound logic
+         (toggleBackgroundAudio) still works without breaking layout. -->
+    <div class="container1" style="position:fixed;top:-200vh;left:-200vw;pointer-events:none;">
+      <label class="switch">
+        <input type="checkbox" class="hidden" id="audio_setting" checked>
+        <div class="slider"></div>
+        <img id="audio_icon_off" class="audio_icon" src="Images\Common_Images\audio_off.png" alt="Audio Off">
+        <img id="audio_icon_on" class="audio_icon" src="Images\Common_Images\audio_on.png" alt="Audio On">
+      </label>
     </div>
-  </div>
 
-  <div id="lp-header">
-    <h1>🏀 Dream Drop</h1>
-    <p>Sri Sathya Sai Vidya Vahini — Inclusive Education</p>
   </div>
+  <!--
+  <div id="loggedin">
+    <img src="Images/Common_Images/avtar.png" alt=Avtar">
+    <label id="Name_Log">Name : </label>
+  </div>-->
 
+  <h1 id="game-title">Dream Drop</h1>
+
+  <!-- Always-visible mute button — Point 2 fix (proper): the taskbar mute
+       button only appears once a level is running. This one is visible
+       from page load, on the menu screen, before any level starts, so
+       audio can genuinely be muted "at any point while using the app". -->
   <button id="global-mute-btn" onclick="globalMuteToggle()" title="Mute / Unmute">
     <img id="global-mute-icon" src="Images/Common_Images/audio_on.png" alt="Sound">
   </button>
-  <p id="mute-hint">🔈 Tap the button, top-left, anytime to mute background music</p>
-  <p id="lp-sub">Who's playing today?</p>
-  <!-- Player cards -->
-  <div id="players-grid">
-    <!-- cards injected by JS -->
-    <div id="add-card" onclick="openCreator()">
-      <div class="add-icon">➕</div>
-      <p>Add New<br>Player</p>
+<p id="mute-hint">🔈 Tap the button, top-left, anytime to mute background music</p>
+  <div class="buttons" id="menu-buttons">
+    <button id="easyBtn">Easy</button>
+    <button id="mediumBtn">Medium</button>
+    <button id="hardBtn">Hard</button>
+    <button id="roadmapBtn" onclick="window.location.href='roadmap.html'">📍 My Progress</button>
+  </div>
+
+  <!--<button id="start-button">Start Game</button>-->
+
+
+  <div id="instruction-modal" class="modal">
+    <div class="modal-content1">
+      <p>Click on the balls!</p>
+      <button id="ok">Okay</button>
     </div>
   </div>
 
-  <!-- Guest option: lets a user start playing immediately without creating a profile -->
-  <div id="guest-row">
-    <button id="guest-btn" onclick="continueAsGuest()">▶ Continue as Guest</button>
-    <p id="guest-hint">No profile needed — your progress won't be saved between sessions.</p>
+  <div id="instruction-modal2" class="modal" style="display: none;">
+    <div class="instruction-content">
+      <p>Drag the ball and drop it into the basket</p>
+      <button id="start-level2-button">Start Level 2</button>
+    </div>
   </div>
 
 
-  <!-- ── AVATAR CREATOR OVERLAY ── -->
-  <div id="creator-overlay">
-    <div id="creator-box">
 
-      <div id="creator-header">
-        <h2 id="creator-title">Create Your Player</h2>
-        <button id="creator-close" onclick="closeCreator()">✕</button>
+
+  <p id="para">Sri Sathya Sai Vidya Vahini </p>
+  <p id="para1">INCLUSIVE EDUCATION</p>
+
+  <img src="Images\Common_Images\vv.png" id="vv">
+  <img src="Images\Common_Images\ie.png" id="ie">
+
+  <!-- MOBILE/TABLET SUPPORT:
+       Wrapped in #kids-row so on phone they sit side by side
+       in a flex row below the buttons instead of overlapping. -->
+  <div id="kids-row">
+    <img src="Images\Common_Images\prem.png" id="prem">
+    <img src="Images\Common_Images\shanti.png" id="shanti">
+  </div>
+
+  <div id="overlay" class="overlay">
+
+  </div>
+
+ 
+
+  <div id="gameOver" class="over">
+    <img src="Images\Common_Images\shanti_overlay.png" alt="Left Image" class="left-image">
+    <img src="Images\Common_Images\prem_overlay.png" alt="Right Image" class="right-image">
+    <div class="game">
+      <p id="gameOverMessage">Do you want to restart?</p>
+      <button id="restartBtn">Restart</button>
+      <button id="quitBtn">Quit</button>
+      <button id="next">Next</button>
+      <!-- MY PROGRESS button in game over modal — always visible after any level -->
+      <button id="progressBtn" onclick="window.location.href='roadmap.html'">📍 My Progress</button>
+      <button id="analytics-btn" onclick="analyticsOpen()">📊 View Analytics</button>
+    </div>
+  </div>
+
+
+  <div id="game-area"></div>
+  <div id="score">Score: <span id="score-value">0</span></div>
+  <div id="time">Time: <span id="time-value">0</span></div>
+<div id="basket"><img src="./Images/Dream_Drop/basket.png" alt="basket" draggable="false"></div>  <div class="obstacle"></div>
+  <div id="maze"></div>
+
+  <!-- =====================================================
+       LIVE FEEDBACK ADDED (Point 5):
+       1. #emoji-burst — shows floating emojis on score events
+       2. #mascot-message — speech bubble above mascots
+       3. #feedback-flash — full screen color flash on success/fail
+       ===================================================== -->
+
+  <!-- Floating emoji that appears and flies up on good/bad events -->
+  <div id="emoji-burst"></div>
+
+  <!-- Speech bubble shown above the mascots during gameplay -->
+  <div id="mascot-message">
+    <span id="mascot-text"></span>
+  </div>
+
+  <!-- Full screen color flash (green = good, red = bad) -->
+  <div id="feedback-flash"></div>
+
+  
+  <div id="game-taskbar">
+    <div id="tb-lvl-wrap">LVL<br><strong id="tb-lvl-num">1</strong></div>
+    <div class="tb-sep"></div>
+    <button class="tb-btn" id="tb-snd" onclick="tbSound()" title="Sound">
+      <img id="tb-snd-img" src="Images/Common_Images/audio_on.png" alt="Sound"></button>
+    <div class="tb-sep"></div>
+    <div id="tb-timer-wrap">⏱<br><strong id="tb-timer-num">0s</strong></div>
+    <div class="tb-sep"></div>
+    <button class="tb-btn" id="tb-pause" onclick="tbPause()" title="Pause">⏸</button>
+    <div class="tb-sep"></div>
+    <button class="tb-btn" id="tb-restart" onclick="tbRestart()" title="Restart">🔄</button>
+  </div>
+
+  <div id="an-overlay">
+    <div id="an-panel">
+      <div id="an-header">
+        <span id="an-title">Mouse Analytics — <span id="an-lvl-badge">—</span></span>
+        <button class="an-hdr-btn" onclick="analyticsClose()">✕ Close</button>
       </div>
-
-      <!-- Step dots -->
-      <div id="step-dots">
-        <div class="sdot on"  id="dot-0"></div>
-        <div class="sdot"     id="dot-1"></div>
-        <div class="sdot"     id="dot-2"></div>
-        <div class="sdot"     id="dot-3"></div>
+      <div id="an-stats">
+        <div class="an-card"><div class="an-lbl">Points</div><div class="an-val" id="an-pts">0</div></div>
+        <div class="an-card"><div class="an-lbl">Avg speed</div><div class="an-val" id="an-spd">0 px/s</div></div>
+        <div class="an-card"><div class="an-lbl">Path length</div><div class="an-val" id="an-len">0 px</div></div>
+        <div class="an-card"><div class="an-lbl">Hesitations</div><div class="an-val" id="an-hes">0</div></div>
+        <div class="an-card"><div class="an-lbl">Duration</div><div class="an-val" id="an-dur">0s</div></div>
       </div>
-
-      <div id="creator-body">
-
-        <!-- STEP 0: Take photo OR pick emoji -->
-        <div class="creator-step active" id="step-0">
-          <div class="step-label">Step 1 — Take your photo or pick an avatar</div>
-
-          <!-- Camera panel -->
-          <div id="cam-panel">
-            <div id="cam-wrap">
-              <video id="cam-video" autoplay playsinline muted></video>
-              <canvas id="cam-canvas"></canvas>
-              <div id="cam-placeholder">🧒</div>
-            </div>
-            <div id="no-cam-msg">
-              Camera not available on this device.<br>
-              A default avatar will be used instead.
-            </div>
-            <div id="cam-btn-row">
-              <button class="creator-btn btn-primary" id="snap-btn" onclick="snapPhoto()">📸 Take Photo</button>
-              <button class="creator-btn btn-neutral" id="retake-btn" onclick="retakePhoto()" style="display:none">🔄 Retake</button>
-              <button class="creator-btn btn-neutral" onclick="showEmojiPicker()">😊 Pick Avatar →</button>
-            </div>
+      <div id="an-body">
+        <div id="an-canvas-col">
+          <div id="an-chk-row">
+            <label><input type="checkbox" id="an-chk-heat" checked> Heatmap</label>
+            <label><input type="checkbox" id="an-chk-path" checked> Path trail</label>
           </div>
-
-          <!-- Emoji picker panel -->
-          <div id="emoji-picker-wrap">
-            <div class="emoji-gender-tabs">
-              <button class="eg-tab active" id="tab-boy"  onclick="switchEmojiTab('boy')">👦 Boy</button>
-              <button class="eg-tab"        id="tab-girl" onclick="switchEmojiTab('girl')">👧 Girl</button>
-            </div>
-            <div id="emoji-grid"></div>
-            <button class="creator-btn btn-neutral" style="align-self:center;" onclick="showCamPanel()">← Use Camera Instead</button>
+          <div id="an-canvas-wrap">
+            <canvas id="an-cv-heat"></canvas><canvas id="an-cv-path"></canvas><canvas id="an-cv-main"></canvas>
           </div>
-
-          <div class="step-nav">
-            <span></span>
-            <button class="creator-btn btn-primary" id="step0-next" onclick="goStep(1)" disabled>Next →</button>
-          </div>
+          <div id="an-fb"><span id="an-fb-dot"></span><span id="an-fb-msg">Play a level to see analytics.</span></div>
         </div>
-
-        <!-- STEP 1: Pick a name -->
-        <div class="creator-step" id="step-1">
-          <div class="step-label">Step 2 — What's your name?</div>
-          <input type="text" id="name-input" placeholder="Your name" maxlength="16" autocomplete="off">
-          <div class="step-nav">
-            <button class="creator-btn btn-neutral" onclick="goStep(0)">← Back</button>
-            <button class="creator-btn btn-primary" onclick="goStep(2)">Next →</button>
-          </div>
+        <div id="an-sidebar">
+          <div class="an-sec"><div class="an-sec-ttl">Speed over time</div><div style="position:relative;height:80px;"><canvas id="an-cv-spd"></canvas></div></div>
+          <div class="an-sec"><div class="an-sec-ttl">Movement breakdown</div><div id="an-pattern"></div></div>
+          <div class="an-sec"><div class="an-sec-ttl">Zone activity</div><div id="an-zones"></div></div>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <!-- STEP 2: Pick jersey colour -->
-        <div class="creator-step" id="step-2">
-          <div class="step-label">Step 3 — Pick your jersey colour</div>
-          <div id="jersey-colours">
-            <!-- swatches injected by JS -->
-          </div>
-          <div class="step-nav">
-            <button class="creator-btn btn-neutral" onclick="goStep(1)">← Back</button>
-            <button class="creator-btn btn-primary" onclick="goStep(3)">Next →</button>
-          </div>
-        </div>
-
-        <!-- STEP 3: Pick jersey number + preview + confirm -->
-        <div class="creator-step" id="step-3">
-          <div class="step-label">Step 4 — Pick your jersey number</div>
-          <div id="jersey-numbers">
-            <!-- buttons injected by JS -->
-          </div>
-
-          <div class="step-label" style="margin-top:8px;">Your player card</div>
-          <div id="preview-card">
-            <div id="preview-frame">
-              <img id="preview-img" src="" alt="Your photo">
-            </div>
-            <div id="preview-name">—</div>
-            <div id="preview-jersey" style="font-size:13px;color:#888;"></div>
-          </div>
-
-          <div class="step-nav">
-            <button class="creator-btn btn-neutral" onclick="goStep(2)">← Back</button>
-            <button class="creator-btn btn-success" onclick="savePlayer()">✅ Let's Play!</button>
-          </div>
-        </div>
-
-      </div><!-- /creator-body -->
-    </div><!-- /creator-box -->
-  </div><!-- /creator-overlay -->
-
-
-<script>
-// =============================================================
-// DREAM DROP — LOGIN PAGE
-// All data stored in localStorage. No server needed.
-// dreamdrop_players = [ { id, name, photo, jerseyColor, jerseyNum, created } ]
-// dreamdrop_current_player = id
-// =============================================================
-
-const JERSEY_COLOURS = [
-  { name:'Red',    hex:'#e03040' },
-  { name:'Blue',   hex:'#2255cc' },
-  { name:'Green',  hex:'#1D9E75' },
-  { name:'Gold',   hex:'#f5a623' },
-  { name:'Purple', hex:'#7c4dff' },
-  { name:'Orange', hex:'#ff6b35' },
-  { name:'Teal',   hex:'#00897b' },
-  { name:'Pink',   hex:'#d4537e' },
-  { name:'Black',  hex:'#1a1a2e' },
-];
-
-const JERSEY_NUMBERS = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33];
-
-// Default avatar — plain basketball emoji as base64 SVG
-const DEFAULT_PHOTO = 'data:image/svg+xml,' + encodeURIComponent(
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' +
-  '<circle cx="50" cy="50" r="50" fill="#f5a623"/>' +
-  '<text x="50" y="68" font-size="56" text-anchor="middle">🧒</text>' +
-  '</svg>'
-);
-
-// ── Emoji avatar options ──────────────────────────────────────
-const EMOJI_AVATARS = {
-  boy: [
-    '👦','🧒','👼','🧑','👲','🧔','👨','🤴',
-    '🦸','🧙','🧑‍🚀','🧑‍🎤','🧑‍🏫','🧑‍⚕️','🧑‍🍳','🧑‍🎨',
-    '🤵','🧑‍🦱','🧑‍🦳','🧑‍🦲'
-  ],
-  girl: [
-    '👧','🧒','👼','🧑','👸','💃','👩','🧕',
-    '🦸','🧙','🧑‍🚀','🧑‍🎤','🧑‍🏫','🧑‍⚕️','🧑‍🍳','🧑‍🎨',
-    '👰','🧑‍🦰','🧑‍🦳','🧑‍🦱'
-  ]
-};
-
-var _emojiTab = 'boy';
-var _pickedEmoji = null;
-
-function makeEmojiSVG(emoji) {
-  return 'data:image/svg+xml,' + encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' +
-    '<circle cx="50" cy="50" r="50" fill="#ede8fa"/>' +
-    '<text x="50" y="70" font-size="58" text-anchor="middle">' + emoji + '</text>' +
-    '</svg>'
-  );
-}
-
-function buildEmojiGrid() {
-  var grid = document.getElementById('emoji-grid');
-  grid.innerHTML = '';
-  EMOJI_AVATARS[_emojiTab].forEach(function(em) {
-    var btn = document.createElement('div');
-    btn.className = 'emoji-opt' + (em === _pickedEmoji ? ' picked' : '');
-    btn.textContent = em;
-    btn.title = em;
-    btn.addEventListener('click', function() {
-      _pickedEmoji = em;
-      _photoData = makeEmojiSVG(em);
-      document.querySelectorAll('.emoji-opt').forEach(function(b){ b.classList.remove('picked'); });
-      btn.classList.add('picked');
-      document.getElementById('step0-next').disabled = false;
-      updatePreview();
-    });
-    grid.appendChild(btn);
-  });
-}
-
-function switchEmojiTab(tab) {
-  _emojiTab = tab;
-  document.getElementById('tab-boy').classList.toggle('active', tab === 'boy');
-  document.getElementById('tab-girl').classList.toggle('active', tab === 'girl');
-  buildEmojiGrid();
-}
-
-function showEmojiPicker() {
-  document.getElementById('cam-panel').style.display = 'none';
-  document.getElementById('emoji-picker-wrap').classList.add('open');
-  buildEmojiGrid();
-}
-
-function showCamPanel() {
-  document.getElementById('emoji-picker-wrap').classList.remove('open');
-  document.getElementById('cam-panel').style.display = '';
-  if (!_photoData || _photoData.includes('ede8fa')) {
-    _photoData = null;
-    document.getElementById('step0-next').disabled = true;
-  }
-}
-
-var MAX_PLAYERS = 5; // ── PLAYER LIMIT: change this number to allow more or fewer profiles
-
-let _players   = [];
-let _pickedColor = JERSEY_COLOURS[0].hex;
-let _pickedNum   = 23;
-let _photoData   = null;  // base64 captured photo
-let _stream      = null;  // camera stream
-let _camAvailable = true;
-let _currentStep  = 0;
-
-// ── Load players ─────────────────────────────────────────────
-function loadPlayers() {
-  try { return JSON.parse(localStorage.getItem('dreamdrop_players') || '[]'); }
-  catch(e) { return []; }
-}
-function savePlayers(p) {
-  localStorage.setItem('dreamdrop_players', JSON.stringify(p));
-}
-
-// ── Render the cards grid ─────────────────────────────────────
-function renderGrid() {
-  _players = loadPlayers();
-  const grid = document.getElementById('players-grid');
-  const addCard = document.getElementById('add-card');
-  grid.innerHTML = '';
-
-  var hostId = localStorage.getItem('dreamdrop_host_player') || '';
-
-  _players.forEach(function(p) {
-    var isHost = (p.id === hostId);
-    const card = document.createElement('div');
-    card.className = 'player-card';
-    card.style.setProperty('--jersey-color', p.jerseyColor);
-    if (isHost) card.style.border = '3px solid #f5a623';
-    card.innerHTML =
-      (isHost ? '<div class="host-badge">&#x1F451; HOST</div>' : '') +
-      '<button class="card-delete" onclick="deletePlayer(\'' + p.id + '\',event)" title="Remove">&#x2715;</button>' +
-      '<div class="player-frame" style="box-shadow:0 0 0 4px ' + p.jerseyColor + '">' +
-        '<img src="' + (p.photo || DEFAULT_PHOTO) + '" alt="' + escHtml(p.name) + '">' +
-        '<div class="jersey-badge" style="background:' + p.jerseyColor + '">' + p.jerseyNum + '</div>' +
-      '</div>' +
-      '<div class="player-name">' + escHtml(p.name) + '</div>' +
-      '<div class="player-stats">' + (isHost ? '&#x1F451; Host' : 'Tap to play!') + '</div>';
-    card.addEventListener('click', function() { selectPlayer(p.id); });
-    grid.appendChild(card);
-  });
-
-  grid.appendChild(addCard);
-
-  var isFull = _players.length >= MAX_PLAYERS;
-  addCard.style.display = isFull ? 'none' : '';
-
-  var fullNotice = document.getElementById('full-notice');
-  if (isFull) {
-    if (!fullNotice) {
-      fullNotice = document.createElement('div');
-      fullNotice.id = 'full-notice';
-      fullNotice.style.cssText = 'width:100%;text-align:center;padding:10px 0;font-size:0.9rem;color:#a00;font-weight:700;';
-      grid.appendChild(fullNotice);
-    }
-    fullNotice.textContent = 'Tablet full (' + MAX_PLAYERS + '/' + MAX_PLAYERS + ' players). Open \u2699\ufe0f Settings to increase the limit or remove a player.';
-  } else if (fullNotice) {
-    fullNotice.remove();
-  }
-
-  if (_players.length > 0 && !hostId && !localStorage.getItem('dreamdrop_host_banner_dismissed')) {
-    document.getElementById('host-banner').style.display = 'flex';
-  }
-
-  updateSettingsPanel();
-}
-
-function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// ── Select a player and go to game ───────────────────────────
-// ── Global mute button (shares state with home.html/scriptt.js) ───────
-// index.html has no audio of its own, but toggling this writes the same
-// 'dreamdrop_muted' key that scriptt.js reads on load, so the preference
-// carries through to gameplay.
-function syncGlobalMuteIcon() {
-  var muted = false;
-  try { muted = localStorage.getItem('dreamdrop_muted') === '1'; } catch(e) {}
-  var btn = document.getElementById('global-mute-btn');
-  var img = document.getElementById('global-mute-icon');
-  var onSrc  = 'Images/Common_Images/audio_on.png';
-  var offSrc = 'Images/Common_Images/audio_off.png';
-  if (btn) btn.classList.toggle('gm-muted', muted);
-  if (img) img.src = muted ? offSrc : onSrc;
-}
-function globalMuteToggle() {
-  var muted = false;
-  try { muted = localStorage.getItem('dreamdrop_muted') === '1'; } catch(e) {}
-  try { localStorage.setItem('dreamdrop_muted', muted ? '0' : '1'); } catch(e) {}
-  syncGlobalMuteIcon();
-}
-document.addEventListener('DOMContentLoaded', syncGlobalMuteIcon);
-syncGlobalMuteIcon();
-
-function selectPlayer(id) {
-  localStorage.setItem('dreamdrop_current_player', id);
-  localStorage.removeItem('dreamdrop_guest_session');
-  window.location.href = 'home.html';
-}
-
-// ── Continue as Guest ──────────────────────────────────────────
-// Does NOT add a card to players-grid or count against MAX_PLAYERS.
-// Uses a fixed 'guest' id so progress persists only within the current
-// device session; flagged with dreamdrop_guest_session so other parts
-// of the app (e.g. host dashboard) can tell it apart from real profiles.
-function continueAsGuest() {
-  var GUEST_ID = 'guest';
-  localStorage.setItem('dreamdrop_current_player', GUEST_ID);
-  localStorage.setItem('dreamdrop_guest_session', '1');
-  window.location.href = 'home.html';
-}
-
-// ── Delete a player ───────────────────────────────────────────
-function deletePlayer(id, e) {
-  e.stopPropagation();
-  if (!confirm('Remove this player? Their progress will be deleted.')) return;
-  _players = loadPlayers().filter(function(p) { return p.id !== id; });
-  savePlayers(_players);
-  // Also remove their progress key
-  localStorage.removeItem('dreamdrop_progress_' + id);
-  renderGrid();
-}
-
-// ── Open creator ──────────────────────────────────────────────
-function openCreator() {
-  if (loadPlayers().length >= MAX_PLAYERS) {
-    alert('This tablet is full! Only ' + MAX_PLAYERS + ' players are allowed.\nAsk your teacher to remove a player to make room.');
-    return;
-  }
-  _photoData   = null;
-  _pickedEmoji = null;
-  _emojiTab    = 'boy';
-  document.getElementById('cam-panel').style.display = '';
-  document.getElementById('emoji-picker-wrap').classList.remove('open');
-  document.getElementById('tab-boy').classList.add('active');
-  document.getElementById('tab-girl').classList.remove('active');
-  _pickedColor = JERSEY_COLOURS[0].hex;
-  _pickedNum   = 23;
-  document.getElementById('name-input').value = '';
-  document.getElementById('step0-next').disabled = true;
-  document.getElementById('retake-btn').style.display = 'none';
-  document.getElementById('snap-btn').style.display   = 'block';
-
-  buildSwatches();
-  buildNumbers();
-  goStep(0);
-  document.getElementById('creator-overlay').classList.add('open');
-  startCamera();
-}
-
-function closeCreator() {
-  stopCamera();
-  document.getElementById('creator-overlay').classList.remove('open');
-}
-
-// ── Camera ────────────────────────────────────────────────────
-function startCamera() {
-  const video    = document.getElementById('cam-video');
-  const placeholder = document.getElementById('cam-placeholder');
-  const noCam    = document.getElementById('no-cam-msg');
-
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    _camAvailable = false;
-    video.style.display = 'none';
-    placeholder.style.display = 'flex';
-    noCam.style.display = 'block';
-    document.getElementById('snap-btn').style.display = 'none';
-    document.getElementById('step0-next').disabled = false;
-    _photoData = DEFAULT_PHOTO;
-    return;
-  }
-
-  navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false })
-    .then(function(stream) {
-      _stream = stream;
-      _camAvailable = true;
-      video.srcObject = stream;
-      video.style.display = 'block';
-      placeholder.style.display = 'none';
-    })
-    .catch(function() {
-      _camAvailable = false;
-      video.style.display = 'none';
-      placeholder.style.display = 'flex';
-      noCam.style.display = 'block';
-      document.getElementById('snap-btn').style.display = 'none';
-      document.getElementById('step0-next').disabled = false;
-      _photoData = DEFAULT_PHOTO;
-    });
-}
-
-function stopCamera() {
-  if (_stream) {
-    _stream.getTracks().forEach(function(t) { t.stop(); });
-    _stream = null;
-  }
-}
-
-function snapPhoto() {
-  const video  = document.getElementById('cam-video');
-  const canvas = document.getElementById('cam-canvas');
-  const snap   = document.getElementById('snap-btn');
-  const retake = document.getElementById('retake-btn');
-  const next   = document.getElementById('step0-next');
-
-  canvas.width  = video.videoWidth  || 320;
-  canvas.height = video.videoHeight || 240;
-  canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-
-  // Mirror so it looks natural (selfie flip)
-  const ctx = canvas.getContext('2d');
-  ctx.save();
-  ctx.scale(-1, 1);
-  ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
-  ctx.restore();
-
-  _photoData = canvas.toDataURL('image/jpeg', 0.75);
-
-  // Show the captured frame, hide live video
-  video.style.display  = 'none';
-  canvas.style.display = 'block';
-  snap.style.display   = 'none';
-  retake.style.display = 'block';
-  next.disabled        = false;
-}
-
-function retakePhoto() {
-  const video  = document.getElementById('cam-video');
-  const canvas = document.getElementById('cam-canvas');
-  const snap   = document.getElementById('snap-btn');
-  const retake = document.getElementById('retake-btn');
-  const next   = document.getElementById('step0-next');
-
-  video.style.display  = 'block';
-  canvas.style.display = 'none';
-  snap.style.display   = 'block';
-  retake.style.display = 'none';
-  next.disabled        = true;
-  _photoData = null;
-}
-
-
-// ── Jersey colour swatches ────────────────────────────────────
-function buildSwatches() {
-  const wrap = document.getElementById('jersey-colours');
-  wrap.innerHTML = '';
-  JERSEY_COLOURS.forEach(function(c, i) {
-    const sw = document.createElement('div');
-    sw.className = 'jc-swatch' + (i === 0 ? ' picked' : '');
-    sw.style.background = c.hex;
-    sw.title = c.name;
-    sw.addEventListener('click', function() {
-      document.querySelectorAll('.jc-swatch').forEach(function(s){ s.classList.remove('picked'); });
-      sw.classList.add('picked');
-      _pickedColor = c.hex;
-      updatePreview();
-    });
-    wrap.appendChild(sw);
-  });
-}
-
-// ── Jersey number buttons ─────────────────────────────────────
-function buildNumbers() {
-  const wrap = document.getElementById('jersey-numbers');
-  wrap.innerHTML = '';
-  JERSEY_NUMBERS.forEach(function(n) {
-    const btn = document.createElement('button');
-    btn.className = 'jn-btn' + (n === _pickedNum ? ' picked' : '');
-    btn.textContent = n;
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.jn-btn').forEach(function(b){ b.classList.remove('picked'); });
-      btn.classList.add('picked');
-      _pickedNum = n;
-      updatePreview();
-    });
-    wrap.appendChild(btn);
-  });
-}
-
-// ── Preview card update ───────────────────────────────────────
-function updatePreview() {
-  const img    = document.getElementById('preview-img');
-  const name   = document.getElementById('preview-name');
-  const jersey = document.getElementById('preview-jersey');
-  const frame  = document.getElementById('preview-frame');
-
-  img.src = _photoData || DEFAULT_PHOTO;
-  frame.style.boxShadow = '0 0 0 4px ' + _pickedColor;
-  name.textContent   = document.getElementById('name-input').value.trim() || '—';
-  jersey.textContent = 'Jersey #' + _pickedNum;
-  jersey.style.color = _pickedColor;
-}
-
-// Name input → live update preview
-document.getElementById('name-input').addEventListener('input', updatePreview);
-
-// ── Step navigation ───────────────────────────────────────────
-function goStep(n) {
-  // Validate step 1 (name)
-  if (n === 2) {
-    const nm = document.getElementById('name-input').value.trim();
-    if (!nm) {
-      document.getElementById('name-input').focus();
-      document.getElementById('name-input').style.borderColor = '#e03040';
-      setTimeout(function(){ document.getElementById('name-input').style.borderColor = ''; }, 1500);
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script src="firebase-config.js"></script>
+  <script>
+  (function() {
+    var pid = localStorage.getItem('dreamdrop_current_player');
+    if (!pid) return;
+    var badge = document.getElementById('player-badge');
+    var isGuest = !!localStorage.getItem('dreamdrop_guest_session');
+    if (isGuest) {
+      if (badge) {
+        badge.style.display = 'flex';
+        document.getElementById('pb-photo').style.display = 'none';
+        document.getElementById('pb-name').textContent = 'Guest';
+        document.getElementById('pb-frame').style.borderColor = '#4b2e83';
+      }
       return;
     }
-  }
+    try {
+      var players = JSON.parse(localStorage.getItem('dreamdrop_players') || '[]');
+      var player = players.find(function(p){ return p.id === pid; });
+      if (!player) return;
+      if (badge) {
+        badge.style.display = 'flex';
+        document.getElementById('pb-photo').src = player.photo || '';
+        document.getElementById('pb-name').textContent = player.name;
+        document.getElementById('pb-frame').style.borderColor = player.jerseyColor || '#4b2e83';
+      }
+    } catch(e) {}
+  })();
+  </script>
 
-  _currentStep = n;
-  document.querySelectorAll('.creator-step').forEach(function(s){ s.classList.remove('active'); });
-  document.getElementById('step-' + n).classList.add('active');
-
-  document.querySelectorAll('.sdot').forEach(function(d, i){ d.classList.toggle('on', i === n); });
-
-  if (n === 3) updatePreview();
-}
-
-// ── Save player ───────────────────────────────────────────────
-function savePlayer() {
-  const name = document.getElementById('name-input').value.trim();
-  if (!name) { goStep(1); return; }
-
-  _players = loadPlayers();
-  if (_players.length >= MAX_PLAYERS) {
-    alert('Player limit reached! Only ' + MAX_PLAYERS + ' players are allowed on this tablet.');
-    closeCreator();
-    return;
-  }
-  const id = 'p_' + Date.now();
-  const player = {
-    id:          id,
-    name:        name,
-    photo:       _photoData || DEFAULT_PHOTO,
-    jerseyColor: _pickedColor,
-    jerseyNum:   _pickedNum,
-    created:     new Date().toISOString()
-  };
-
-  _players.push(player);
-  savePlayers(_players);
-
-  stopCamera();
-  document.getElementById('creator-overlay').classList.remove('open');
-  renderGrid();
-
-  // Auto-select the new player and launch the game
-  setTimeout(function() { selectPlayer(id); }, 300);
-}
-
-// =============================================================
-// BROWSER STORAGE REFERENCE TABLE
-// =============================================================
-
-// Each entry: { id, icon, name, platform, quota_mb, notes }
-// quota_mb = typical localStorage quota for that browser
-// max_players = Math.floor(quota_mb * 1024 * 1024 * 0.6 / (55*1024))
-var BROWSER_PROFILES = [
-  { id:'chrome',    icon:'🌐', name:'Chrome',             platform:'Desktop/Android', quota_mb:10,   notes:'Up to 10 MB' },
-  { id:'firefox',   icon:'🦊', name:'Firefox',            platform:'Desktop',         quota_mb:10,   notes:'Up to 10 MB' },
-  { id:'safari_d',  icon:'🧭', name:'Safari (Mac/PC)',    platform:'Desktop',         quota_mb:5,    notes:'~5 MB' },
-  { id:'safari_ios',icon:'📱', name:'Safari (iPhone)',    platform:'iOS',             quota_mb:5,    notes:'~5 MB, may vary' },
-  { id:'safari_ipad',icon:'🍎',name:'Safari (iPad)',      platform:'iPadOS',          quota_mb:5,    notes:'~5 MB' },
-  { id:'edge',      icon:'🔷', name:'Edge',               platform:'Desktop',         quota_mb:10,   notes:'Same as Chrome' },
-  { id:'opera',     icon:'🔴', name:'Opera',              platform:'Desktop/Android', quota_mb:10,   notes:'Chromium-based' },
-  { id:'samsung',   icon:'🌀', name:'Samsung Internet',   platform:'Android',         quota_mb:5,    notes:'~5 MB typical' },
-  { id:'brave',     icon:'🦁', name:'Brave',              platform:'Desktop/Android', quota_mb:10,   notes:'Chromium-based' },
-  { id:'uc',        icon:'⚡', name:'UC Browser',         platform:'Android',         quota_mb:2,    notes:'~2 MB limited' },
-];
-
-// Per-browser max players (60% of quota / 55 KB per player), capped at 30
-BROWSER_PROFILES.forEach(function(b) {
-  b.maxPlayers = Math.min(30, Math.max(2, Math.floor(b.quota_mb * 1024 * 1024 * 0.6 / (55 * 1024))));
-});
-
-var _selectedBrowserId = null;
-
-// ── Auto-detect browser ───────────────────────────────────────
-function detectBrowserId() {
-  var ua = navigator.userAgent;
-  var isIOS = /iPhone|iPad|iPod/.test(ua);
-  if (isIOS && /iPad/.test(ua)) return 'safari_ipad';
-  if (isIOS) return 'safari_ios';
-  if (/SamsungBrowser/.test(ua)) return 'samsung';
-  if (/UCBrowser/.test(ua)) return 'uc';
-  if (/OPR|Opera/.test(ua)) return 'opera';
-  if (/Brave/.test(navigator.userAgent) || (navigator.brave && navigator.brave.isBrave)) return 'brave';
-  if (/Edg\//.test(ua)) return 'edge';
-  if (/Firefox/.test(ua)) return 'firefox';
-  if (/Safari/.test(ua) && !/Chrome/.test(ua)) return 'safari_d';
-  if (/Chrome/.test(ua)) return 'chrome';
-  return null;
-}
-
-function buildBrowserTable() {
-  var tbody = document.getElementById('browser-table-body');
-  if (!tbody) return;
-  tbody.innerHTML = '';
-
-  var detectedId = detectBrowserId();
-  var savedId    = localStorage.getItem('dreamdrop_browser_profile') || detectedId;
-  _selectedBrowserId = savedId;
-
-  BROWSER_PROFILES.forEach(function(b) {
-    var isDetected = (b.id === detectedId);
-    var isSelected = (b.id === savedId);
-    var tr = document.createElement('tr');
-    if (isSelected) tr.classList.add('selected');
-    if (isDetected) tr.classList.add('detected');
-    tr.setAttribute('data-browser-id', b.id);
-    tr.innerHTML =
-      '<td><span class="bt-icon">' + b.icon + '</span>' + b.name +
-        (isDetected ? '<span class="bt-badge detected">detected</span>' : '') +
-        (isSelected && !isDetected ? '<span class="bt-badge selected">active</span>' : '') +
-      '</td>' +
-      '<td>' + b.notes + '</td>' +
-      '<td style="font-weight:900;color:#4b2e83;">' + b.maxPlayers + '</td>';
-    tr.addEventListener('click', function() { selectBrowserRow(b.id); });
-    tbody.appendChild(tr);
-  });
-
-  updateBtApplyRow(savedId);
-}
-
-function selectBrowserRow(browserId) {
-  _selectedBrowserId = browserId;
-  var rows = document.querySelectorAll('#browser-table-body tr');
-  rows.forEach(function(r) {
-    r.classList.remove('selected');
-    // Remove old active badge
-    var activeBadge = r.querySelector('.bt-badge.selected');
-    if (activeBadge) activeBadge.remove();
-  });
-  var target = document.querySelector('#browser-table-body tr[data-browser-id="' + browserId + '"]');
-  if (target) target.classList.add('selected');
-  updateBtApplyRow(browserId);
-  var btn = document.getElementById('bt-apply-btn');
-  if (btn) btn.disabled = false;
-}
-
-function updateBtApplyRow(browserId) {
-  var profile = BROWSER_PROFILES.find(function(b) { return b.id === browserId; });
-  var info = document.getElementById('bt-selected-info');
-  var label = document.getElementById('bt-apply-label');
-  if (!profile) {
-    if (info) info.textContent = '';
-    if (label) label.textContent = 'Select a browser above to apply its limit';
-    return;
-  }
-  if (info) info.textContent = profile.icon + ' ' + profile.name + ' — up to ' + profile.maxPlayers + ' players (' + profile.notes + ')';
-  if (label) label.textContent = 'Apply ' + profile.name + ' limit (' + profile.maxPlayers + ' players)?';
-}
-
-function filterBrowserTable(query) {
-  var q = query.trim().toLowerCase();
-  var rows = document.querySelectorAll('#browser-table-body tr');
-  var visible = 0;
-  rows.forEach(function(tr) {
-    var show = !q || tr.textContent.toLowerCase().includes(q);
-    tr.style.display = show ? '' : 'none';
-    if (show) visible++;
-  });
-  var noRes = document.getElementById('bt-no-results');
-  if (noRes) noRes.style.display = (visible === 0 && q) ? 'block' : 'none';
-  var clearBtn = document.getElementById('bt-search-clear');
-  if (clearBtn) clearBtn.style.display = q ? 'inline-block' : 'none';
-}
-
-function clearBrowserSearch() {
-  var inp = document.getElementById('bt-search');
-  if (inp) { inp.value = ''; inp.focus(); }
-  filterBrowserTable('');
-}
-
-function applyBrowserLimit() {
-  if (!_selectedBrowserId) return;
-  var profile = BROWSER_PROFILES.find(function(b) { return b.id === _selectedBrowserId; });
-  if (!profile) return;
-
-  var currentCount = loadPlayers().length;
-  if (profile.maxPlayers < currentCount) {
-    alert('You already have ' + currentCount + ' players. ' + profile.name + ' only supports ' + profile.maxPlayers + '. Remove ' + (currentCount - profile.maxPlayers) + ' player(s) first.');
-    return;
-  }
-
-  _browserMaxPlayers = profile.maxPlayers;
-  MAX_PLAYERS = Math.min(MAX_PLAYERS, profile.maxPlayers);
-  localStorage.setItem('dreamdrop_browser_profile', _selectedBrowserId);
-  localStorage.setItem('dreamdrop_max_players', MAX_PLAYERS);
-
-  // Update hint
-  var hint = document.getElementById('limit-max-hint');
-  if (hint) hint.textContent = profile.icon + ' ' + profile.name + ': max ' + profile.maxPlayers + ' players (' + profile.notes + ')';
-
-  updateLimitStepper();
-  renderGrid();
-  updateMemoryBar();
-  buildBrowserTable(); // refresh badges
-
-  var btn = document.getElementById('bt-apply-btn');
-  if (btn) { btn.textContent = '✅ Applied!'; setTimeout(function(){ btn.textContent = '✅ Apply'; }, 1800); }
-}
-
-// =============================================================
-// SETTINGS PANEL — 3-dots menu
-// =============================================================
-
-// ── Compute browser-based max player limit ────────────────────
-// Each player stores roughly: photo (20-50 KB jpeg) + progress (~2 KB)
-// We aim to use at most 60% of available localStorage (usually 5–10 MB).
-// We probe the actual quota and estimate how many players fit.
-function estimateBrowserMaxPlayers() {
-  // Try to detect storage quota via StorageManager API
-  if (navigator.storage && navigator.storage.estimate) {
-    return navigator.storage.estimate().then(function(est) {
-      var usableBytes = Math.min(est.quota || 5242880, 5242880); // cap at 5 MB safety
-      var perPlayer = 55 * 1024; // ~55 KB per player (photo + data)
-      return Math.max(2, Math.min(50, Math.floor((usableBytes * 0.6) / perPlayer)));
-    });
-  }
-  // Fallback: probe localStorage by writing incrementally
-  return Promise.resolve(probeLocalStorageMax());
-}
-
-function probeLocalStorageMax() {
-  try {
-    var testKey = '__dd_probe__';
-    var chunk = 'x'.repeat(50 * 1024); // 50 KB chunk
-    var count = 0;
-    while (count < 50) {
-      try {
-        localStorage.setItem(testKey + count, chunk);
-        count++;
-      } catch(e) { break; }
-    }
-    for (var i = 0; i < count; i++) { try { localStorage.removeItem(testKey + i); } catch(e){} }
-    // Each player ~55 KB; use 60% of probed space
-    return Math.max(2, Math.min(50, Math.floor((count * 50 * 1024 * 0.6) / (55 * 1024))));
-  } catch(e) { return 10; }
-}
-
-var _browserMaxPlayers = 10; // will be updated async
-
-function initSettings() {
-  // Load saved limit
-  var saved = parseInt(localStorage.getItem('dreamdrop_max_players') || '0', 10);
-  if (saved >= 1) MAX_PLAYERS = saved;
-
-  // Apply saved browser profile quota immediately
-  var savedBrowser = localStorage.getItem('dreamdrop_browser_profile');
-  if (savedBrowser) {
-    var prof = BROWSER_PROFILES.find(function(b) { return b.id === savedBrowser; });
-    if (prof) {
-      _browserMaxPlayers = prof.maxPlayers;
-      var hint = document.getElementById('limit-max-hint');
-      if (hint) hint.textContent = prof.icon + ' ' + prof.name + ': max ' + prof.maxPlayers + ' players (' + prof.notes + ')';
-    }
-  }
-
-  estimateBrowserMaxPlayers().then(function(max) {
-    // Only override if no browser profile manually selected
-    if (!localStorage.getItem('dreamdrop_browser_profile')) {
-      _browserMaxPlayers = max;
-      var hint = document.getElementById('limit-max-hint');
-      if (hint) hint.textContent = 'Browser can fit roughly ' + max + ' players (based on storage)';
-    }
-    updateLimitStepper();
-  });
-
-  updateLimitStepper();
-  updateMemoryBar();
-}
-
-function updateLimitStepper() {
-  var disp = document.getElementById('limit-display');
-  var minus = document.getElementById('lim-minus');
-  var plus  = document.getElementById('lim-plus');
-  if (!disp) return;
-  disp.textContent = MAX_PLAYERS;
-  if (minus) minus.disabled = MAX_PLAYERS <= Math.max(1, loadPlayers().length);
-  if (plus)  plus.disabled  = MAX_PLAYERS >= _browserMaxPlayers;
-}
-
-function changeLimit(delta) {
-  var current = loadPlayers().length;
-  var newVal = MAX_PLAYERS + delta;
-  // Can't go below current player count
-  if (newVal < current) {
-    alert('You already have ' + current + ' players. Remove some before lowering the limit below ' + current + '.');
-    return;
-  }
-  if (newVal < 1) return;
-  if (newVal > _browserMaxPlayers) {
-    alert('Your browser storage can only safely fit around ' + _browserMaxPlayers + ' players.');
-    return;
-  }
-  MAX_PLAYERS = newVal;
-  localStorage.setItem('dreamdrop_max_players', MAX_PLAYERS);
-  updateLimitStepper();
-  renderGrid(); // re-check add-card visibility
-  updateMemoryBar();
-}
-
-// ── Memory usage bar ─────────────────────────────────────────
-function getLocalStorageBytes() {
-  var total = 0;
-  try {
-    for (var k in localStorage) {
-      if (!localStorage.hasOwnProperty(k)) continue;
-      total += (localStorage.getItem(k) || '').length * 2; // UTF-16
-    }
-  } catch(e) {}
-  return total;
-}
-
-function getDreamDropBytes() {
-  var keys = ['dreamdrop_players', 'dreamdrop_current_player', 'dreamdrop_max_players',
-              'dreamdrop_host_player', 'dreamdrop_host_banner_dismissed'];
-  var total = 0;
-  try {
-    // players + progress keys
-    for (var k in localStorage) {
-      if (!localStorage.hasOwnProperty(k)) continue;
-      if (k.startsWith('dreamdrop')) total += (localStorage.getItem(k) || '').length * 2;
-    }
-  } catch(e) {}
-  return total;
-}
-
-function formatBytes(b) {
-  if (b < 1024) return b + ' B';
-  if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
-  return (b / (1024 * 1024)).toFixed(2) + ' MB';
-}
-
-function updateMemoryBar() {
-  var label = document.getElementById('mem-label');
-  var fill  = document.getElementById('mem-bar-fill');
-  var breakdown = document.getElementById('mem-breakdown');
-  if (!label) return;
-
-  var ddBytes  = getDreamDropBytes();
-  var allBytes = getLocalStorageBytes();
-
-  // Try storage estimate for quota
-  if (navigator.storage && navigator.storage.estimate) {
-    navigator.storage.estimate().then(function(est) {
-      var quota = est.quota || 5 * 1024 * 1024;
-      var used  = est.usage  || allBytes;
-      var pct   = Math.min(100, Math.round((used / quota) * 100));
-      label.textContent = formatBytes(used) + ' used of ' + formatBytes(quota) + ' (' + pct + '%)';
-      fill.style.width = pct + '%';
-      fill.classList.toggle('warn', pct > 70);
-
-      var players = loadPlayers();
-      var avgPhoto = players.length > 0
-        ? players.reduce(function(s, p) { return s + ((p.photo || '').length * 2); }, 0) / players.length
-        : 0;
-      breakdown.innerHTML =
-        'Dream Drop data: <strong>' + formatBytes(ddBytes) + '</strong><br>' +
-        'Players: ' + players.length + ' &nbsp;|&nbsp; Avg photo: ' + formatBytes(avgPhoto) + '<br>' +
-        'Fits ~' + _browserMaxPlayers + ' players in this browser';
-    });
-  } else {
-    // Fallback — assume 5 MB quota
-    var quota = 5 * 1024 * 1024;
-    var pct = Math.min(100, Math.round((allBytes / quota) * 100));
-    label.textContent = formatBytes(allBytes) + ' used of ~5 MB (' + pct + '%)';
-    fill.style.width = pct + '%';
-    fill.classList.toggle('warn', pct > 70);
-    breakdown.innerHTML = 'Dream Drop data: <strong>' + formatBytes(ddBytes) + '</strong>';
-  }
-}
-
-// ── Settings panel open/close ─────────────────────────────────
-function openSettings() {
-  document.getElementById('settings-panel').classList.add('open');
-  document.getElementById('sp-backdrop').classList.add('open');
-  updateMemoryBar();
-  updateLimitStepper();
-  updateSettingsPanel();
-  buildBrowserTable();
-  // Clear any previous search
-  var inp = document.getElementById('bt-search');
-  if (inp) { inp.value = ''; filterBrowserTable(''); }
-}
-
-function closeSettings() {
-  document.getElementById('settings-panel').classList.remove('open');
-  document.getElementById('sp-backdrop').classList.remove('open');
-}
-
-function updateSettingsPanel() {
-  var sel = document.getElementById('host-select');
-  if (!sel) return;
-  var hostId = localStorage.getItem('dreamdrop_host_player') || '';
-  var players = loadPlayers();
-  sel.innerHTML = '<option value="">— none —</option>';
-  players.forEach(function(p) {
-    var opt = document.createElement('option');
-    opt.value = p.id;
-    opt.textContent = p.name + (p.id === hostId ? ' 👑' : '');
-    if (p.id === hostId) opt.selected = true;
-    sel.appendChild(opt);
-  });
-  // Update limit display
-  var disp = document.getElementById('limit-display');
-  if (disp) disp.textContent = MAX_PLAYERS;
-  updateLimitStepper();
-}
-
-// ── Host player assignment ────────────────────────────────────
-function assignHost() {
-  var sel = document.getElementById('host-select');
-  if (!sel) return;
-  var chosen = sel.value;
-  if (chosen) {
-    localStorage.setItem('dreamdrop_host_player', chosen);
-  } else {
-    localStorage.removeItem('dreamdrop_host_player');
-  }
-  renderGrid();
-  // Dismiss suggestion banner once a host is set
-  if (chosen) {
-    localStorage.setItem('dreamdrop_host_banner_dismissed', '1');
-    document.getElementById('host-banner').style.display = 'none';
-  }
-}
-
-function dismissHostBanner() {
-  localStorage.setItem('dreamdrop_host_banner_dismissed', '1');
-  document.getElementById('host-banner').style.display = 'none';
-}
-
-// ── Reset all data ────────────────────────────────────────────
-function resetAllData() {
-  if (!confirm('Delete ALL players and ALL progress? This cannot be undone!')) return;
-  try {
-    var toRemove = [];
-    for (var k in localStorage) {
-      if (localStorage.hasOwnProperty(k) && k.startsWith('dreamdrop')) toRemove.push(k);
-    }
-    toRemove.forEach(function(k) { localStorage.removeItem(k); });
-    MAX_PLAYERS = 5;
-  } catch(e) {}
-  closeSettings();
-  renderGrid();
-}
-
-// ── Init ──────────────────────────────────────────────────────
-renderGrid();
-initSettings();
-
-// If already logged in, go straight to game
-const cur = localStorage.getItem('dreamdrop_current_player');
-if (cur && loadPlayers().find(function(p){ return p.id === cur; })) {
-  // Show the grid for 0.5s then auto-redirect (let child see who they are)
-  // Actually — always show the grid so child can consciously choose
-  // window.location.href = 'home
-  // .html';
-}
-</script>
+  <script src="scriptt.js"></script>
+  <!-- Sync existing #time-value to taskbar timer -->
+  <script>
+    (function() {
+      setInterval(function() {
+        var src = document.getElementById('time-value');
+        var dst = document.getElementById('tb-timer-num');
+        if (!src || !dst) return;
+        var raw = (src.innerText || src.textContent || '0').replace(/s/g, '').trim();
+        dst.textContent = raw + 's';
+      }, 500);
+    })();
+  </script>
+  <!-- progress.js is now embedded inside scriptt.js -->
 </body>
+
 </html>
