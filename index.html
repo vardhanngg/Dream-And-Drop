@@ -153,6 +153,37 @@
     #add-card .add-icon { font-size: clamp(2rem,4vw,2.8rem); color: #4b2e83; }
     #add-card p { font-size: clamp(0.75rem,1.5vw,0.9rem); color: #4b2e83; font-weight: 700; text-align: center; line-height: 1.3; }
 
+    /* ── Guest option ─────────────────────────────────────── */
+    #guest-row {
+      max-width: 420px;
+      margin: clamp(10px,2vh,20px) auto 0;
+      padding: 0 16px clamp(16px,3vh,28px);
+      text-align: center;
+    }
+    #guest-btn {
+      width: 100%;
+      padding: 12px 20px;
+      border-radius: 40px;
+      border: 2px solid #4b2e83;
+      background: rgba(255,255,255,0.85);
+      color: #4b2e83;
+      font-weight: 800;
+      font-size: clamp(0.85rem,1.8vw,1rem);
+      cursor: pointer;
+      transition: background 0.18s, transform 0.15s;
+    }
+    #guest-btn:hover { background: #4b2e83; color: #fff; transform: translateY(-2px); }
+    #guest-btn:active { transform: scale(0.97); }
+    #guest-hint { margin-top: 6px; font-size: clamp(0.65rem,1.3vw,0.78rem); color: #4b4b4b; }
+
+    /* ── Always-visible mute button (consistency with home.html) ──
+       index.html itself has no sound, but toggling this sets the shared
+       mute preference in localStorage so it's already applied once the
+       player moves on to home.html / gameplay. */
+    #global-mute-btn{position:fixed;top:56px;left:14px;z-index:100002;width:70px;height:70px;border-radius:50%;border:1.5px solid rgba(75,46,131,0.35);background:rgba(255,255,255,0.85);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.18);padding:0;}
+    #global-mute-btn img{width:35px;height:35px;}
+    #global-mute-btn.gm-muted{background:rgba(220,55,55,0.15);border-color:rgba(220,55,55,0.5);}
+    #mute-hint{position:fixed;top:118px;left:14px;max-width:150px;font-size:0.68rem;line-height:1.25;color:#4b2e83;font-weight:600;background:rgba(255,255,255,0.85);padding:5px 8px;border-radius:8px;z-index:100002;}
     /* ── AVATAR CREATOR OVERLAY ──────────────────────────── */
     #creator-overlay {
       display: none;
@@ -886,8 +917,13 @@
     <h1>🏀 Dream Drop</h1>
     <p>Sri Sathya Sai Vidya Vahini — Inclusive Education</p>
   </div>
-  <p id="lp-sub">Who's playing today?</p>
 
+  <button id="global-mute-btn" onclick="globalMuteToggle()" title="Mute / Unmute">
+    <img id="global-mute-icon" src="Images/Common_Images/audio_on.png" alt="Sound">
+  </button>
+  <p id="mute-hint">🔈 Tap the button, top-left, anytime to mute background music</p>
+  <p id="lp-sub">Who's playing today?</p>
+   <p id="mute-hint">🔈 Tap the button, top-left, anytime to mute background music</p>
   <!-- Player cards -->
   <div id="players-grid">
     <!-- cards injected by JS -->
@@ -895,6 +931,12 @@
       <div class="add-icon">➕</div>
       <p>Add New<br>Player</p>
     </div>
+  </div>
+
+  <!-- Guest option: lets a user start playing immediately without creating a profile -->
+  <div id="guest-row">
+    <button id="guest-btn" onclick="continueAsGuest()">▶ Continue as Guest</button>
+    <p id="guest-hint">No profile needed — your progress won't be saved between sessions.</p>
   </div>
 
 
@@ -1179,8 +1221,44 @@ function escHtml(s) {
 }
 
 // ── Select a player and go to game ───────────────────────────
+// ── Global mute button (shares state with home.html/scriptt.js) ───────
+// index.html has no audio of its own, but toggling this writes the same
+// 'dreamdrop_muted' key that scriptt.js reads on load, so the preference
+// carries through to gameplay.
+function syncGlobalMuteIcon() {
+  var muted = false;
+  try { muted = localStorage.getItem('dreamdrop_muted') === '1'; } catch(e) {}
+  var btn = document.getElementById('global-mute-btn');
+  var img = document.getElementById('global-mute-icon');
+  var onSrc  = 'Images/Common_Images/audio_on.png';
+  var offSrc = 'Images/Common_Images/audio_off.png';
+  if (btn) btn.classList.toggle('gm-muted', muted);
+  if (img) img.src = muted ? offSrc : onSrc;
+}
+function globalMuteToggle() {
+  var muted = false;
+  try { muted = localStorage.getItem('dreamdrop_muted') === '1'; } catch(e) {}
+  try { localStorage.setItem('dreamdrop_muted', muted ? '0' : '1'); } catch(e) {}
+  syncGlobalMuteIcon();
+}
+document.addEventListener('DOMContentLoaded', syncGlobalMuteIcon);
+syncGlobalMuteIcon();
+
 function selectPlayer(id) {
   localStorage.setItem('dreamdrop_current_player', id);
+  localStorage.removeItem('dreamdrop_guest_session');
+  window.location.href = 'home.html';
+}
+
+// ── Continue as Guest ──────────────────────────────────────────
+// Does NOT add a card to players-grid or count against MAX_PLAYERS.
+// Uses a fixed 'guest' id so progress persists only within the current
+// device session; flagged with dreamdrop_guest_session so other parts
+// of the app (e.g. host dashboard) can tell it apart from real profiles.
+function continueAsGuest() {
+  var GUEST_ID = 'guest';
+  localStorage.setItem('dreamdrop_current_player', GUEST_ID);
+  localStorage.setItem('dreamdrop_guest_session', '1');
   window.location.href = 'home.html';
 }
 

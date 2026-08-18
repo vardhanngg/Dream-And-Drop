@@ -68,6 +68,14 @@
 
   <h1 id="game-title">Dream Drop</h1>
 
+  <!-- Always-visible mute button — Point 2 fix (proper): the taskbar mute
+       button only appears once a level is running. This one is visible
+       from page load, on the menu screen, before any level starts, so
+       audio can genuinely be muted "at any point while using the app". -->
+  <button id="global-mute-btn" onclick="globalMuteToggle()" title="Mute / Unmute">
+    <img id="global-mute-icon" src="Images/Common_Images/audio_on.png" alt="Sound">
+  </button>
+<p id="mute-hint">🔈 Tap the button, top-left, anytime to mute background music</p>
   <div class="buttons" id="menu-buttons">
     <button id="easyBtn">Easy</button>
     <button id="mediumBtn">Medium</button>
@@ -207,11 +215,21 @@
   (function() {
     var pid = localStorage.getItem('dreamdrop_current_player');
     if (!pid) return;
+    var badge = document.getElementById('player-badge');
+    var isGuest = !!localStorage.getItem('dreamdrop_guest_session');
+    if (isGuest) {
+      if (badge) {
+        badge.style.display = 'flex';
+        document.getElementById('pb-photo').style.display = 'none';
+        document.getElementById('pb-name').textContent = 'Guest';
+        document.getElementById('pb-frame').style.borderColor = '#4b2e83';
+      }
+      return;
+    }
     try {
       var players = JSON.parse(localStorage.getItem('dreamdrop_players') || '[]');
       var player = players.find(function(p){ return p.id === pid; });
       if (!player) return;
-      var badge = document.getElementById('player-badge');
       if (badge) {
         badge.style.display = 'flex';
         document.getElementById('pb-photo').src = player.photo || '';
