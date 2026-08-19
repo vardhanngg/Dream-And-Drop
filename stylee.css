@@ -1252,7 +1252,7 @@ body.is-touch-device button{min-height:44px;}
 #global-mute-btn img{width:35px;height:35px;}
 #global-mute-btn.gm-muted{background:rgba(220,55,55,0.28);border-color:rgba(220,55,55,0.5);}
 #mute-hint{position:fixed;top:118px;left:14px;max-width:150px;font-size:0.68rem;line-height:1.25;color:#fff;font-weight:600;background:rgba(12,10,30,0.7);padding:5px 8px;border-radius:8px;z-index:100002;backdrop-filter:blur(6px);opacity:0;transition:opacity 0.3s ease;pointer-events:none;}
-#global-mute-btn:hover ~ #mute-hint{opacity:1;}
+#mute-hint.show-hint{opacity:1;}
 body.game-active #mute-hint{display:none;}
 #mute-hint.gm-hidden{display:none;}
 body.game-active #global-mute-btn{display:none;} /* in-level taskbar's mute button takes over */
