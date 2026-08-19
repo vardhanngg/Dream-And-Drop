@@ -178,8 +178,7 @@ function showRewardPopup(badgeIds) {
 
   const popup = document.createElement('div');
   popup.id = 'reward-popup';
-  popup.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;z-index:999999;pointer-events:none;';
-
+  popup.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;display:flex;align-items:flex-start;justify-content:center;padding-top:4vh;z-index:999999;pointer-events:none;';
   const badgesHTML = badgeIds.map(id => {
     const b = BADGE_DEFS[id];
     return `<div class="rp-badge">

@@ -220,7 +220,7 @@
       const earnedBadges = data.badges || [];
       const completed    = data.totalLevelsCompleted || 0;
       const pct          = Math.round((completed / 33) * 100);
-      const highestUnlocked = Math.max(1, data.highestLevel + 1);
+      const highestUnlocked = Math.min(33, Math.max(1, data.highestLevel + 1));
 
       // ---- Summary ----
       document.getElementById('summary-bar').innerHTML = `

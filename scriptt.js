@@ -1631,17 +1631,18 @@ let currentLevel = 0;
 // LEVEL 3 — One shelf, one wide gap, go straight up
 // -------------------------------------------------------
 function level3() {
-  isGameRunning = true;
+  startTimedLevel(3, '6vh', '44vw', 50);
+  //isGameRunning = true;
   startTracking();
-  currentLevel = 3;
+  //currentLevel = 3;
 
-  document.getElementById('score').style.display  = 'none';
-  document.getElementById('time').style.display   = 'none';
+  //document.getElementById('score').style.display  = 'none';
+  //document.getElementById('time').style.display   = 'none';
   document.getElementById('basket').style.display = 'block';
   document.getElementById('basket').style.top     = '6vh';
   document.getElementById('basket').style.left    = '44vw';  // top-center
 
-  clearInterval(timerInterval);
+  //clearInterval(timerInterval);
   clearInterval(ballCreationIntervalId);
   document.querySelectorAll('.obstacle').forEach(function(o) { o.remove(); });
 
@@ -1670,17 +1671,18 @@ function level3() {
 // LEVEL 4 — Two shelves, left gap then right gap (gentle zigzag)
 // -------------------------------------------------------
 function level4() {
+  startTimedLevel(4,  '6vh',  '8vw',  50);
   isGameRunning = true;
   startTracking();
   currentLevel = 4;
 
   document.getElementById('score').style.display  = 'none';
-  document.getElementById('time').style.display   = 'none';
+ // document.getElementById('time').style.display   = 'none';
   document.getElementById('basket').style.display = 'block';
   document.getElementById('basket').style.top     = '6vh';
   document.getElementById('basket').style.left    = '8vw';   // top-left
 
-  clearInterval(timerInterval);
+ // clearInterval(timerInterval);
   clearInterval(ballCreationIntervalId);
   document.querySelectorAll('.obstacle').forEach(function(o) { o.remove(); });
 
@@ -1711,17 +1713,18 @@ function level4() {
 //            Only ONE corner to navigate
 // -------------------------------------------------------
 function level5() {
+  startTimedLevel(5,  '6vh',  '20vw', 50);
   isGameRunning = true;
   startTracking();
   currentLevel = 5;
 
   document.getElementById('score').style.display  = 'none';
-  document.getElementById('time').style.display   = 'none';
+  //document.getElementById('time').style.display   = 'none';
   document.getElementById('basket').style.display = 'block';
   document.getElementById('basket').style.top     = '6vh';
   document.getElementById('basket').style.left    = '20vw';  // top-right
 
-  clearInterval(timerInterval);
+  //clearInterval(timerInterval);
   clearInterval(ballCreationIntervalId);
   document.querySelectorAll('.obstacle').forEach(function(o) { o.remove(); });
 
@@ -1750,15 +1753,16 @@ function level5() {
 }
 
 function level6() {
+  startTimedLevel(6,  '6vh',  '48vw', 45);
   isGameRunning = true;
   startTracking();
   currentLevel = 6;
   document.getElementById('score').style.display = 'none';
-  document.getElementById('time').style.display = 'none';
+  //document.getElementById('time').style.display = 'none';
   document.getElementById('basket').style.display = 'block';
   document.getElementById('basket').style.top  = '6vh';
   document.getElementById('basket').style.left = '48vw';
-  clearInterval(timerInterval);
+//  clearInterval(timerInterval);
   clearInterval(ballCreationIntervalId);
   document.querySelectorAll('.obstacle').forEach(o => o.remove());
 
@@ -1780,15 +1784,16 @@ function level6() {
 }
 
 function level7() {
+  startTimedLevel(7,  '80vh', '82vw', 45);
   isGameRunning = true;
   startTracking();
   currentLevel = 7;
   document.getElementById('score').style.display = 'none';
-  document.getElementById('time').style.display = 'none';
+  //document.getElementById('time').style.display = 'none';
   document.getElementById('basket').style.display = 'block';
   document.getElementById('basket').style.top  = '80vh';
   document.getElementById('basket').style.left = '82vw';
-  clearInterval(timerInterval);
+  //clearInterval(timerInterval);
   clearInterval(ballCreationIntervalId);
   document.querySelectorAll('.obstacle').forEach(o => o.remove());
 
@@ -1815,15 +1820,16 @@ function level7() {
 }
 
 function level8() {
+  startTimedLevel(8,  '48vh', '5vw',  45);
   isGameRunning = true;
   startTracking();
   currentLevel = 8;
   document.getElementById('score').style.display = 'none';
-  document.getElementById('time').style.display = 'none';
+  //document.getElementById('time').style.display = 'none';
   document.getElementById('basket').style.display = 'block';
   document.getElementById('basket').style.top  = '48vh';
   document.getElementById('basket').style.left = '5vw';
-  clearInterval(timerInterval);
+  //clearInterval(timerInterval);
   clearInterval(ballCreationIntervalId);
   document.querySelectorAll('.obstacle').forEach(o => o.remove());
 
@@ -1851,15 +1857,16 @@ function level8() {
 // ===========================
 
 function level9() {
+  startTimedLevel(9,  '5vh',  '9vw',  45);
   isGameRunning = true;
   startTracking();
   currentLevel = 9;
   document.getElementById('score').style.display = 'none';
-  document.getElementById('time').style.display = 'none';
+  //document.getElementById('time').style.display = 'none';
   document.getElementById('basket').style.display = 'block';
   document.getElementById('basket').style.top  = '5vh';
   document.getElementById('basket').style.left = '9vw';
-  clearInterval(timerInterval);
+  //clearInterval(timerInterval);
   clearInterval(ballCreationIntervalId);
   document.querySelectorAll('.obstacle').forEach(o => o.remove());
 
@@ -1881,15 +1888,16 @@ function level9() {
 }
 
 function level10() {
+  startTimedLevel(10, '48vh', '85vw', 40);
   isGameRunning = true;
   startTracking();
   currentLevel = 10;
   document.getElementById('score').style.display = 'none';
-  document.getElementById('time').style.display = 'none';
+  //document.getElementById('time').style.display = 'none';
   document.getElementById('basket').style.display = 'block';
   document.getElementById('basket').style.top  = '48vh';
   document.getElementById('basket').style.left = '85vw';
-  clearInterval(timerInterval);
+  //clearInterval(timerInterval);
   clearInterval(ballCreationIntervalId);
   document.querySelectorAll('.obstacle').forEach(o => o.remove());
 
@@ -1920,15 +1928,16 @@ function level10() {
 }
 
 function level11() {
+  startTimedLevel(11, '80vh', '85vw', 40);
   isGameRunning = true;
   startTracking();
   currentLevel = 11;
   document.getElementById('score').style.display = 'none';
-  document.getElementById('time').style.display = 'none';
+  //document.getElementById('time').style.display = 'none';
   document.getElementById('basket').style.display = 'block';
   document.getElementById('basket').style.top  = '80vh';
   document.getElementById('basket').style.left = '85vw';
-  clearInterval(timerInterval);
+  //clearInterval(timerInterval);
   clearInterval(ballCreationIntervalId);
   document.querySelectorAll('.obstacle').forEach(o => o.remove());
 
@@ -1955,15 +1964,16 @@ function level11() {
 }
 
 function level12() {
+  startTimedLevel(12, '8vh',  '8vw',  40);
   isGameRunning = true;
   startTracking();
   currentLevel = 12;
   document.getElementById('score').style.display = 'none';
-  document.getElementById('time').style.display = 'none';
+  //document.getElementById('time').style.display = 'none';
   document.getElementById('basket').style.display = 'block';
   document.getElementById('basket').style.top  = '8vh';
   document.getElementById('basket').style.left = '8vw';
-  clearInterval(timerInterval);
+  //clearInterval(timerInterval);
   clearInterval(ballCreationIntervalId);
   document.querySelectorAll('.obstacle').forEach(o => o.remove());
 
@@ -1999,15 +2009,16 @@ function level12() {
 // ===========================
 
 function level13() {
+  startTimedLevel(13, '80vh', '85vw', 38);
   isGameRunning = true;
   startTracking();
   currentLevel = 13;
   document.getElementById('score').style.display = 'none';
-  document.getElementById('time').style.display = 'none';
+  //document.getElementById('time').style.display = 'none';
   document.getElementById('basket').style.display = 'block';
   document.getElementById('basket').style.top  = '80vh';
   document.getElementById('basket').style.left = '85vw';
-  clearInterval(timerInterval);
+  //clearInterval(timerInterval);
   clearInterval(ballCreationIntervalId);
   document.querySelectorAll('.obstacle').forEach(o => o.remove());
 
@@ -2034,15 +2045,16 @@ function level13() {
 }
 
 function level14() {
+  startTimedLevel(14, '80vh', '85vw', 38);
   isGameRunning = true;
   startTracking();
   currentLevel = 14;
   document.getElementById('score').style.display = 'none';
-  document.getElementById('time').style.display = 'none';
+  //document.getElementById('time').style.display = 'none';
   document.getElementById('basket').style.display = 'block';
   document.getElementById('basket').style.top  = '80vh';
   document.getElementById('basket').style.left = '85vw';
-  clearInterval(timerInterval);
+  //clearInterval(timerInterval);
   clearInterval(ballCreationIntervalId);
   document.querySelectorAll('.obstacle').forEach(o => o.remove());
 
@@ -2071,15 +2083,16 @@ function level14() {
 }
 
 function level15() {
+  startTimedLevel(15, '28vh', '48vw', 38);
   isGameRunning = true;
   startTracking();
   currentLevel = 15;
   document.getElementById('score').style.display = 'none';
-  document.getElementById('time').style.display = 'none';
+  //document.getElementById('time').style.display = 'none';
   document.getElementById('basket').style.display = 'block';
   document.getElementById('basket').style.top  = '28vh';
   document.getElementById('basket').style.left = '48vw';
-  clearInterval(timerInterval);
+  //clearInterval(timerInterval);
   clearInterval(ballCreationIntervalId);
   document.querySelectorAll('.obstacle').forEach(o => o.remove());
 
@@ -2125,7 +2138,7 @@ function level16() {
   document.getElementById('basket').style.display = 'block';
   document.getElementById('basket').style.top  = '9vh';
   document.getElementById('basket').style.left = '85vw';
-  clearInterval(timerInterval);
+  //clearInterval(timerInterval);
   clearInterval(ballCreationIntervalId);
   document.querySelectorAll('.obstacle').forEach(o => o.remove());
 
@@ -2161,7 +2174,7 @@ function level17() {
   document.getElementById('basket').style.display = 'block';
   document.getElementById('basket').style.top  = '10vh';
   document.getElementById('basket').style.left = '10vw';
-  clearInterval(timerInterval);
+  //clearInterval(timerInterval);
   clearInterval(ballCreationIntervalId);
   document.querySelectorAll('.obstacle').forEach(o => o.remove());
 
@@ -2196,7 +2209,7 @@ function level18() {
   document.getElementById('basket').style.display = 'block';
   document.getElementById('basket').style.top  = '8vh';
   document.getElementById('basket').style.left = '45vw';
-  clearInterval(timerInterval);
+  //clearInterval(timerInterval);
   clearInterval(ballCreationIntervalId);
   document.querySelectorAll('.obstacle').forEach(o => o.remove());
 
@@ -2273,29 +2286,26 @@ function startLevelCommon(lvl, basketTop, basketLeft) {
 
 function startTimedLevel(lvl, basketTop, basketLeft, seconds) {
   isGameRunning = true;
-  startTracking();
-  currentLevel = lvl;
-  document.getElementById('basket').style.display = 'block';
-  document.getElementById('basket').style.top    = basketTop;
-  document.getElementById('basket').style.left   = basketLeft;
-  clearInterval(timerInterval);
-  clearInterval(ballCreationIntervalId);
-  document.querySelectorAll('.obstacle').forEach(o => o.remove());
-  document.getElementById('score').style.display = 'none';
-  document.getElementById('time').style.display  = 'block';
-  let remaining = seconds;
+    currentLevel = lvl;
+    let remaining = seconds;
   document.getElementById('time-value').innerText = remaining;
-  timerInterval = setInterval(() => {
+  const tick = () => {
+    if (timerInterval !== intervalId) {
+      clearInterval(intervalId);
+      return;
+    }
     remaining--;
     document.getElementById('time-value').innerText = remaining;
     if (remaining <= 0) {
-      clearInterval(timerInterval);
+      clearInterval(intervalId);
       if (isGameRunning) {
         document.dispatchEvent(new CustomEvent('feedbackScoreBad', { detail: { type: 'timeout' } }));
         showGameOverAlert(false, currentLevel);
       }
     }
-  }, 1000);
+  };
+  const intervalId = setInterval(tick, 1000);
+  timerInterval = intervalId;
   document.addEventListener('mouseup', () => checkDrop(ball, 'basket', currentLevel));
 }
 
@@ -2311,7 +2321,7 @@ function level19() {
   document.getElementById('basket').style.display = 'block';
   document.getElementById('basket').style.top  = '6vh';
   document.getElementById('basket').style.left = '80vw';
-  clearInterval(timerInterval);
+  //clearInterval(timerInterval);
   clearInterval(ballCreationIntervalId);
   document.querySelectorAll('.obstacle').forEach(o => o.remove());//i added to check
   const obstacles = [
