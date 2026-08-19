@@ -254,6 +254,23 @@
     })();
   </script>
   <!-- progress.js is now embedded inside scriptt.js -->
+
+  <!-- Mute hint hover behavior -->
+  <script>
+    (function() {
+      var muteBtn = document.getElementById('global-mute-btn');
+      var muteHint = document.getElementById('mute-hint');
+      if (!muteBtn || !muteHint) return;
+      
+      muteBtn.addEventListener('mouseenter', function() {
+        muteHint.classList.add('show-hint');
+      });
+      
+      muteBtn.addEventListener('mouseleave', function() {
+        muteHint.classList.remove('show-hint');
+      });
+    })();
+  </script>
 </body>
 
 </html>
