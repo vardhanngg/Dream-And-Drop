@@ -2353,6 +2353,11 @@ function level19() {
 
 function level20() {
   startTimedLevel(20, '30vh', '40vw', 35);
+  document.getElementById('basket').style.display = 'block';
+  document.getElementById('basket').style.top  = '30vh';
+  document.getElementById('basket').style.left = '40vw';
+  //clearInterval(timerInterval);
+  clearInterval(ballCreationIntervalId);
   const obstacles = [
     { top: 0,  left: 0,  width: 100, height: 3  },
     { top: 95, left: 0,  width: 100, height: 3  },
@@ -2381,6 +2386,11 @@ function level20() {
 
 function level21() {
   startTimedLevel(21, '45vh', '45vw', 30);
+  document.getElementById('basket').style.display = 'block';
+  document.getElementById('basket').style.top  = '45vh';
+  document.getElementById('basket').style.left = '45vw';
+  //clearInterval(timerInterval);
+  clearInterval(ballCreationIntervalId);
   const obstacles = [
     { top: 0,  left: 0,  width: 100, height: 3  },
     { top: 95, left: 0,  width: 100, height: 3  },
@@ -2417,6 +2427,11 @@ function level21() {
 
 function level22() {
   startTimedLevel(22, '60vh', '17vw', 25);
+  document.getElementById('basket').style.display = 'block';
+  document.getElementById('basket').style.top  = '60vh';
+  document.getElementById('basket').style.left = '17vw';
+  //clearInterval(timerInterval);
+  clearInterval(ballCreationIntervalId);
   const obstacles = [
     { top: 0,  left: 0,  width: 100, height: 3  },
     { top: 95, left: 0,  width: 100, height: 3  },
@@ -2448,6 +2463,11 @@ function level22() {
 
 function level23() {
   startTimedLevel(23, '40vh', '35vw', 25);
+  document.getElementById('basket').style.display = 'block';
+  document.getElementById('basket').style.top  = '40vh';
+  document.getElementById('basket').style.left = '35vw';
+  //clearInterval(timerInterval);
+  clearInterval(ballCreationIntervalId);
   const obstacles = [
     { top: 0,  left: 0,  width: 100, height: 3  },
     { top: 95, left: 0,  width: 100, height: 3  },
@@ -2480,6 +2500,11 @@ function level23() {
 
 function level24() {
   startTimedLevel(24, '6vh', '82vw', 25);
+  document.getElementById('basket').style.display = 'block';
+  document.getElementById('basket').style.top  = '6vh';
+  document.getElementById('basket').style.left = '82vw';
+  //clearInterval(timerInterval);
+  clearInterval(ballCreationIntervalId);
   const obstacles = [
     { top: 0,  left: 0,  width: 100, height: 3  },
     { top: 95, left: 0,  width: 100, height: 3  },
@@ -2515,6 +2540,11 @@ function level24() {
 
 function level25() {
   startTimedLevel(25, '45vh', '8vw', 20);
+  document.getElementById('basket').style.display = 'block';
+  document.getElementById('basket').style.top  = '45vh';
+  document.getElementById('basket').style.left = '8vw';
+  //clearInterval(timerInterval);
+  clearInterval(ballCreationIntervalId);
   const obstacles = [
     { top: 0,  left: 0,  width: 100, height: 3  },
     { top: 95, left: 0,  width: 100, height: 3  },
@@ -2548,6 +2578,11 @@ function level25() {
 
 function level26() {
   startTimedLevel(26, '60vh', '90vw', 25);
+  document.getElementById('basket').style.display = 'block';
+  document.getElementById('basket').style.top  = '60vh';
+  document.getElementById('basket').style.left = '90vw';
+  //clearInterval(timerInterval);
+  clearInterval(ballCreationIntervalId);
   const obstacles = [
     { top: 0,  left: 0,  width: 100, height: 3  },
     { top: 95, left: 0,  width: 100, height: 3  },
@@ -2575,6 +2610,11 @@ function level26() {
 
 function level27() {
   startTimedLevel(27, '25vh', '23vw', 10);
+  document.getElementById('basket').style.display = 'block';
+  document.getElementById('basket').style.top  = '25vh';
+  document.getElementById('basket').style.left = '23vw';
+  //clearInterval(timerInterval);
+  clearInterval(ballCreationIntervalId);
   const obstacles = [
     { top: 0,  left: 0,  width: 100, height: 3  },
     { top: 98, left: 0,  width: 100, height: 3  },
@@ -2608,6 +2648,11 @@ function level27() {
 
 function level28() {
   startTimedLevel(28, '48vh', '85vw', 25);
+  document.getElementById('basket').style.display = 'block';
+  document.getElementById('basket').style.top  = '48vh';
+  document.getElementById('basket').style.left = '85vw';
+  //clearInterval(timerInterval);
+  clearInterval(ballCreationIntervalId);
   const obstacles = [
     { top: 0,  left: 0,  width: 100, height: 3  },
     { top: 95, left: 0,  width: 100, height: 3  },
@@ -2635,6 +2680,11 @@ function level28() {
 
 function level29() {
   startTimedLevel(29, '79vh', '85vw', 28);
+  document.getElementById('basket').style.display = 'block';
+  document.getElementById('basket').style.top  = '79vh';
+  document.getElementById('basket').style.left = '85vw';
+  //clearInterval(timerInterval);
+  clearInterval(ballCreationIntervalId);
   const obstacles = [
     { top: 0,  left: 0,  width: 100, height: 3  },
     { top: 98, left: 0,  width: 100, height: 3  },
@@ -2671,6 +2721,11 @@ function level29() {
 
 function level30() {
   startTimedLevel(30, '8vh', '8vw', 30);
+  document.getElementById('basket').style.display = 'block';
+  document.getElementById('basket').style.top  = '8vh';
+  document.getElementById('basket').style.left = '8vw';
+  //clearInterval(timerInterval);
+  clearInterval(ballCreationIntervalId);
   const obstacles = [
     { top: 0,  left: 0,  width: 100, height: 3  },
     { top: 97, left: 0,  width: 100, height: 3  },
@@ -2729,6 +2784,11 @@ function level30() {
 
 function level31() {
   startTimedLevel(31, '8vh', '87vw', 20);
+  document.getElementById('basket').style.display = 'block';
+  document.getElementById('basket').style.top  = '8vh';
+  document.getElementById('basket').style.left = '87vw';
+  //clearInterval(timerInterval);
+  clearInterval(ballCreationIntervalId);
   const obstacles = [
     { top: 0,  left: 0,  width: 100, height: 3  },
     { top: 95, left: 0,  width: 100, height: 3  },
@@ -2761,6 +2821,11 @@ function level31() {
 
 function level32() {
   startTimedLevel(32, '6vh', '82vw', 25);
+  document.getElementById('basket').style.display = 'block';
+  document.getElementById('basket').style.top  = '6vh';
+  document.getElementById('basket').style.left = '82vw';
+  //clearInterval(timerInterval);
+  clearInterval(ballCreationIntervalId);
   const obstacles = [
     { top: 0,  left: 0,  width: 100, height: 3  },
     { top: 95, left: 0,  width: 100, height: 3  },
@@ -2790,6 +2855,11 @@ function level32() {
 
 function level33() {
   startTimedLevel(33, '48vh', '48vw', 15);
+  document.getElementById('basket').style.display = 'block';
+  document.getElementById('basket').style.top  = '48vh';
+  document.getElementById('basket').style.left = '48vw';
+  //clearInterval(timerInterval);
+  clearInterval(ballCreationIntervalId);
   const obstacles = [
     { top: 0,  left: 0,  width: 100, height: 3  },
     { top: 97, left: 0,  width: 100, height: 3  },
